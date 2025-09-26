@@ -24,7 +24,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     
     try {
       const staff = JSON.parse(staffMembers);
-      const currentStaff = staff.find((member: any) => member.apiKey === apiKey);
+      const currentStaff = staff.find((member: { apiKey: string; role: string }) => member.apiKey === apiKey);
       return currentStaff ? currentStaff.role : null;
     } catch (error) {
       console.error('Error parsing staff members:', error);
