@@ -9,6 +9,7 @@ import { TrainingStats, TrainingData, QuickReferenceItem, User } from '@/types';
 import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
 import Sidebar from '@/components/Sidebar';
+import ManageStaff from '@/components/ManageStaff';
 
 // Mock data
 const mockTrainingData: TrainingData[] = [
@@ -131,8 +132,13 @@ export default function DashboardPage() {
 
         {/* Dashboard Content */}
         <div className="flex-1 p-6 space-y-6">
-          {/* Welcome Section */}
-          <WelcomeSection />
+          {/* Conditional Content Based on Active Section */}
+          {activeSection === 'manage-staff' ? (
+            <ManageStaff />
+          ) : (
+            <>
+              {/* Welcome Section */}
+              <WelcomeSection />
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -281,6 +287,8 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>
