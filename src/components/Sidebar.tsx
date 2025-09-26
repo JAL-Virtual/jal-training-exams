@@ -24,7 +24,12 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     
     try {
       const staff = JSON.parse(staffMembers);
+      console.log('Staff members:', staff);
+      console.log('Current API key:', apiKey);
+      
       const currentStaff = staff.find((member: { apiKey: string; role: string }) => member.apiKey === apiKey);
+      console.log('Current staff member:', currentStaff);
+      
       return currentStaff ? currentStaff.role : null;
     } catch (error) {
       console.error('Error parsing staff members:', error);
@@ -38,6 +43,13 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   const canAccessTraining = currentUserRole === 'Trainer' || isAdmin;
   const canAccessExamination = currentUserRole === 'Examiner' || isAdmin;
   const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner') || isAdmin;
+  
+  // Debug logging
+  console.log('Current user role:', currentUserRole);
+  console.log('Is admin:', isAdmin);
+  console.log('Can access training:', canAccessTraining);
+  console.log('Can access examination:', canAccessExamination);
+  console.log('Can access control:', canAccessControl);
 
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
