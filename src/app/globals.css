@@ -9,7 +9,7 @@
   --font-serif: var(--font-playfair);
   --font-mono: var(--font-jetbrains-mono);
   --font-display: var(--font-orbitron);
-  --font-comic: 'Comic Neue', cursive;
+  --font-comic: var(--font-comic-neue);
 }
 
 @media (prefers-color-scheme: dark) {
