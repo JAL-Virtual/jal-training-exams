@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { isAuthenticated } from '@/lib/api';
-import { TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
+import { TrainingStats, TrainingData, QuickReferenceItem, User } from '@/types';
 import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
+import Sidebar from '@/components/Sidebar';
 
 // Mock data
 const mockTrainingData: TrainingData[] = [
@@ -30,7 +31,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [stats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
@@ -103,115 +104,11 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg border-r border-gray-200">
-        <div className="p-2 border-b border-gray-200">
-          <div className="flex items-center justify-center">
-            <Image 
-              src="/img/jal-logo-large.png"
-              alt="JAL Logo"
-              width={160}
-              height={160}
-              className="object-contain"
-            />
-          </div>
-        </div>
-
-        <nav className="p-4 space-y-2">
-          {/* DASHBOARDS */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">DASHBOARDS</h3>
-            <div className="space-y-1">
-              <button 
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeSection === 'dashboard' 
-                    ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setActiveSection('dashboard')}
-              >
-                Main Dashboard
-              </button>
-              <button 
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeSection === 'squadron' 
-                    ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setActiveSection('squadron')}
-              >
-                Japan Squadron
-              </button>
-            </div>
-          </div>
-
-          {/* TRAINING DEPARTMENT */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">TRAINING DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Training
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Approved Trainers
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Upcoming Training
-              </button>
-            </div>
-          </div>
-
-          {/* EXAM DEPARTMENT */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">EXAM DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Request Exam
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Theoretical Checkout
-              </button>
-            </div>
-          </div>
-
-          {/* RESOURCES DEPARTMENT */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">RESOURCES DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Local Procedures
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                Charts
-              </button>
-            </div>
-          </div>
-
-          {/* MANAGEMENT DEPARTMENT - Admin Only */}
-          {user && (user.rank?.name?.toLowerCase().includes('admin') || 
-                   user.rank?.name?.toLowerCase().includes('manager') || 
-                   user.rank?.name?.toLowerCase().includes('chief') ||
-                   user.rank_id === '1' || // Assuming rank_id 1 is admin
-                   user.id === 1) && (
-            <div className="mb-6">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">MANAGEMENT DEPARTMENT</h3>
-              <div className="space-y-1">
-                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                  User Management
-                </button>
-                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                  System Settings
-                </button>
-                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                  Reports & Analytics
-                </button>
-                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
-                  Audit Logs
-                </button>
-              </div>
-            </div>
-          )}
-        </nav>
-      </div>
+      <Sidebar 
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
+        user={user}
+      />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
