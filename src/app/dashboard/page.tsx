@@ -181,10 +181,14 @@ export default function DashboardPage() {
             
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">
-                    {user?.name?.split(' ').map(n => n[0]).join('') || 'JL'}
-                  </span>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
+                  <Image 
+                    src="/img/jal-icon.png"
+                    alt="JAL Icon"
+                    width={32}
+                    height={32}
+                    className="object-contain"
+                  />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">{user?.name || 'Pilot'}</p>
