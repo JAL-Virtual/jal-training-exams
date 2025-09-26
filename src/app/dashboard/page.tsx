@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { isAuthenticated } from '@/lib/api';
-import { TrainingStats, TrainingData, QuickReferenceItem, User } from '@/types';
+import { TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
 import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
 import Sidebar from '@/components/Sidebar';
@@ -32,7 +32,6 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [user, setUser] = useState<User | null>(null);
   const [stats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
@@ -46,34 +45,7 @@ export default function DashboardPage() {
       return;
     }
     
-    // Fetch user data to check admin status
-    const fetchUserData = async () => {
-      try {
-        const apiKey = localStorage.getItem('jal_api_key');
-        if (!apiKey) return;
-
-        const response = await fetch('/api/auth/verify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ apiKey }),
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          if (result.ok && result.user) {
-            setUser(result.user);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
+    setIsLoading(false);
   }, [router]);
 
   const handleLogout = () => {
@@ -108,7 +80,6 @@ export default function DashboardPage() {
       <Sidebar 
         activeSection={activeSection}
         onSectionChange={setActiveSection}
-        user={user}
       />
 
       {/* Main Content */}

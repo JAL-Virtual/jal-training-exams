@@ -2,15 +2,13 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { User } from '@/types';
 
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
-  user: User | null;
 }
 
-export default function Sidebar({ activeSection, onSectionChange, user }: SidebarProps) {
+export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   // Check for specific administrator API key
   const isAdmin = typeof window !== 'undefined' && localStorage.getItem('jal_api_key') === '29e2bb1d4ae031ed47b6';
 

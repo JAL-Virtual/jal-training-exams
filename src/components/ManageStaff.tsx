@@ -193,7 +193,7 @@ export default function ManageStaff() {
         {staffMembers.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p>No staff members added yet.</p>
-            <p className="text-sm">Click "Add Staff Member" to get started.</p>
+            <p className="text-sm">Click &quot;Add Staff Member&quot; to get started.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
