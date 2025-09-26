@@ -75,7 +75,7 @@ export class APIClient {
         success: false,
         error: 'Invalid API key'
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         error: 'Network error occurred'
@@ -83,7 +83,7 @@ export class APIClient {
     }
   }
 
-  async getTrainingStats(): Promise<any> {
+  async getTrainingStats(): Promise<{ totalTrainingRequested: number; totalTrainingCompleted: number; totalTrainers: number; totalExaminers: number }> {
     // Mock data for now - replace with actual API call
     return {
       totalTrainingRequested: 15,

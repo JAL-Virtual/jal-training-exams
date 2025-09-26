@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { isAuthenticated, getStoredUser } from '@/lib/api';
 import { User, TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
 
@@ -28,7 +29,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [user, setUser] = useState<User | null>(null);
-  const [stats, setStats] = useState<TrainingStats>({
+  const [stats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
     totalTrainers: 12,
@@ -61,10 +62,12 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <img 
+            <Image 
               src="/img/jal-logo.png"
               alt="Japan Airlines Logo"
-              className="w-12 h-12 object-contain"
+              width={48}
+              height={48}
+              className="object-contain"
             />
           </div>
           <p className="text-xl text-gray-600">Loading Dashboard...</p>
@@ -79,10 +82,12 @@ export default function DashboardPage() {
       <div className="w-64 bg-white shadow-lg border-r border-gray-200">
         <div className="p-2 border-b border-gray-200">
           <div className="flex items-center justify-center">
-            <img 
+            <Image 
               src="/img/jal-logo-large.png"
               alt="JAL Logo"
-              className="w-40 h-40 object-contain"
+              width={160}
+              height={160}
+              className="object-contain"
             />
           </div>
         </div>

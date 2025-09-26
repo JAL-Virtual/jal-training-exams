@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { LoginFormData } from '@/types';
 
 export default function LoginPage() {
@@ -81,8 +82,9 @@ export default function LoginPage() {
       } else {
         throw new Error(result.error || 'Authentication failed');
       }
-    } catch (e: any) {
-      setError(e?.message ?? "Something went wrong");
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : "Something went wrong";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -97,10 +99,12 @@ export default function LoginPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <img 
+            <Image 
               src="/img/jal-logo.png"
               alt="Japan Airlines Logo"
-              className="w-12 h-12 object-contain"
+              width={48}
+              height={48}
+              className="object-contain"
             />
           </div>
           <p className="text-xl text-gray-600">Loading...</p>
@@ -135,10 +139,12 @@ export default function LoginPage() {
           <div className="p-8 border-b border-gray-200/20">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <img 
+                <Image 
                   src={isDark ? "/img/jal-logo-dark.png" : "/img/jal-logo.png"}
                   alt="JAL Logo"
-                  className="w-10 h-10 object-contain"
+                  width={40}
+                  height={40}
+                  className="object-contain"
                 />
                 <div>
                   <h1 className="text-xl font-bold">JAL Training Portal</h1>

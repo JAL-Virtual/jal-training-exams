@@ -60,8 +60,9 @@ export async function POST(req: Request) {
 			{ error: "Unauthorized (invalid API key or wrong auth method). Tried X-API-Key and Bearer on /user & /ping." },
 			{ status: 401 }
 		);
-	} catch (e: any) {
-		return NextResponse.json({ error: e?.message ?? "Server error" }, { status: 500 });
+	} catch (e: unknown) {
+		const errorMessage = e instanceof Error ? e.message : "Server error";
+		return NextResponse.json({ error: errorMessage }, { status: 500 });
 	}
 }
 

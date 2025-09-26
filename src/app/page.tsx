@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 type Star = { top: number; left: number; size: number; dur: number; delay: number };
 
@@ -58,10 +59,12 @@ export default function LandingPage() {
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
         <div className="text-center">
           <div className="flex items-center justify-center mx-auto mb-4">
-            <img 
+            <Image 
               src="/img/jal-logo.png"
               alt="Japan Airlines Logo"
-              className="w-24 h-24 object-contain"
+              width={96}
+              height={96}
+              className="object-contain"
             />
           </div>
           <p className="text-xl">Loading...</p>
@@ -232,14 +235,19 @@ export default function LandingPage() {
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.img 
+              <motion.div
                 key={isDark ? "dark" : "light"}
-                src={isDark ? "/img/jal-logo-dark.png" : "/img/jal-logo.png"}
-                alt="Japan Airlines Logo"
-                className="w-40 h-40 md:w-48 md:h-48 object-contain"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.3 }}
-              />
+              >
+                <Image 
+                  src={isDark ? "/img/jal-logo-dark.png" : "/img/jal-logo.png"}
+                  alt="Japan Airlines Logo"
+                  width={192}
+                  height={192}
+                  className="object-contain"
+                />
+              </motion.div>
             </motion.div>
           </motion.div>
 
