@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [user, setUser] = useState<any>(null);
   const [stats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
@@ -42,7 +43,35 @@ export default function DashboardPage() {
       router.push('/login');
       return;
     }
-    setIsLoading(false);
+    
+    // Fetch user data to check admin status
+    const fetchUserData = async () => {
+      try {
+        const apiKey = localStorage.getItem('jal_api_key');
+        if (!apiKey) return;
+
+        const response = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ apiKey }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.ok && result.user) {
+            setUser(result.user);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, [router]);
 
   const handleLogout = () => {
@@ -156,6 +185,31 @@ export default function DashboardPage() {
               </button>
             </div>
           </div>
+
+          {/* MANAGEMENT DEPARTMENT - Admin Only */}
+          {user && (user.rank?.name?.toLowerCase().includes('admin') || 
+                   user.rank?.name?.toLowerCase().includes('manager') || 
+                   user.rank?.name?.toLowerCase().includes('chief') ||
+                   user.rank_id === '1' || // Assuming rank_id 1 is admin
+                   user.id === 1) && (
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">MANAGEMENT DEPARTMENT</h3>
+              <div className="space-y-1">
+                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                  User Management
+                </button>
+                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                  System Settings
+                </button>
+                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                  Reports & Analytics
+                </button>
+                <button className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                  Audit Logs
+                </button>
+              </div>
+            </div>
+          )}
         </nav>
       </div>
 
