@@ -3,7 +3,14 @@
 import React, { useState, useEffect } from 'react';
 
 export default function UserDataDebug() {
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [debugInfo, setDebugInfo] = useState<{
+    status?: number;
+    ok?: boolean;
+    result?: Record<string, unknown>;
+    userKeys?: string[];
+    userData?: Record<string, unknown>;
+    error?: string;
+  } | null>(null);
 
   useEffect(() => {
     const testAPI = async () => {

@@ -7,9 +7,22 @@ export interface Airline {
   logo: string | null;
 }
 
+export interface Subfleet {
+  id: number;
+  name: string;
+  type: string;
+}
+
+export interface Bid {
+  id: number;
+  flight_id: number;
+  pilot_id: number;
+  created_at: string;
+}
+
 export interface Rank {
   name: string;
-  subfleets: any[];
+  subfleets: Subfleet[];
 }
 
 export interface User {
@@ -28,7 +41,7 @@ export interface User {
   status: number;
   state: number;
   airline: Airline;
-  bids: any[];
+  bids: Bid[];
   rank: Rank;
 }
 

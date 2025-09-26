@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { isAuthenticated, getStoredUser } from '@/lib/api';
-import { User, TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
+import { isAuthenticated } from '@/lib/api';
+import { TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
 import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
-import UserDataDebug from '@/components/UserDataDebug';
 
 // Mock data
 const mockTrainingData: TrainingData[] = [
