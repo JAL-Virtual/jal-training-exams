@@ -11,6 +11,33 @@ interface SidebarProps {
 export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   // Check for specific administrator API key
   const isAdmin = typeof window !== 'undefined' && localStorage.getItem('jal_api_key') === '29e2bb1d4ae031ed47b6';
+  
+  // Get current user's role from staff members
+  const getCurrentUserRole = () => {
+    if (typeof window === 'undefined') return null;
+    
+    const apiKey = localStorage.getItem('jal_api_key');
+    if (!apiKey) return null;
+    
+    const staffMembers = localStorage.getItem('jal_staff_members');
+    if (!staffMembers) return null;
+    
+    try {
+      const staff = JSON.parse(staffMembers);
+      const currentStaff = staff.find((member: any) => member.apiKey === apiKey);
+      return currentStaff ? currentStaff.role : null;
+    } catch (error) {
+      console.error('Error parsing staff members:', error);
+      return null;
+    }
+  };
+  
+  const currentUserRole = getCurrentUserRole();
+  
+  // Role-based access control
+  const canAccessTraining = currentUserRole === 'Trainer' || isAdmin;
+  const canAccessExamination = currentUserRole === 'Examiner' || isAdmin;
+  const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner') || isAdmin;
 
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
@@ -55,48 +82,52 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         </div>
 
         {/* TRAINING DEPARTMENT */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">TRAINING DEPARTMENT</h3>
-          <div className="space-y-1">
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('training')}
-            >
-              Training
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('approved-trainers')}
-            >
-              Approved Trainers
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('upcoming-training')}
-            >
-              Upcoming Training
-            </button>
+        {canAccessTraining && (
+          <div className="mb-6">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">TRAINING DEPARTMENT</h3>
+            <div className="space-y-1">
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('training')}
+              >
+                Training
+              </button>
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('approved-trainers')}
+              >
+                Approved Trainers
+              </button>
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('upcoming-training')}
+              >
+                Upcoming Training
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* EXAM DEPARTMENT */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">EXAM DEPARTMENT</h3>
-          <div className="space-y-1">
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('request-exam')}
-            >
-              Request Exam
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('theoretical-checkout')}
-            >
-              Theoretical Checkout
-            </button>
+        {canAccessExamination && (
+          <div className="mb-6">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">EXAM DEPARTMENT</h3>
+            <div className="space-y-1">
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('request-exam')}
+              >
+                Request Exam
+              </button>
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('theoretical-checkout')}
+              >
+                Theoretical Checkout
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* RESOURCES DEPARTMENT */}
         <div className="mb-6">
@@ -118,35 +149,43 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         </div>
 
         {/* STAFF DEPARTMENT */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">STAFF DEPARTMENT</h3>
-          <div className="space-y-1">
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('control')}
-            >
-              Control
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('examination')}
-            >
-              Examination
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('training')}
-            >
-              Training
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('pickup-training')}
-            >
-              Pickup Training
-            </button>
+        {canAccessControl && (
+          <div className="mb-6">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">STAFF DEPARTMENT</h3>
+            <div className="space-y-1">
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                onClick={() => onSectionChange('control')}
+              >
+                Control
+              </button>
+              {canAccessExamination && (
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => onSectionChange('examination')}
+                >
+                  Examination
+                </button>
+              )}
+              {canAccessTraining && (
+                <>
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => onSectionChange('training')}
+                  >
+                    Training
+                  </button>
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => onSectionChange('pickup-training')}
+                  >
+                    Pickup Training
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* MANAGEMENT DEPARTMENT - Admin Only */}
         {isAdmin && (
