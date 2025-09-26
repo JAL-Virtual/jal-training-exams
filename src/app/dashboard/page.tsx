@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { isAuthenticated, getStoredUser } from '@/lib/api';
 import { User, TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
+import UserProfile from '@/components/UserProfile';
+import WelcomeSection from '@/components/WelcomeSection';
+import UserDataDebug from '@/components/UserDataDebug';
 
 // Mock data
 const mockTrainingData: TrainingData[] = [
@@ -28,7 +31,6 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [user, setUser] = useState<User | null>(null);
   const [stats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
@@ -41,12 +43,6 @@ export default function DashboardPage() {
       router.push('/login');
       return;
     }
-
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-    }
-
     setIsLoading(false);
   }, [router]);
 
@@ -179,50 +175,14 @@ export default function DashboardPage() {
               <span className="text-gray-700 font-medium">Settings</span>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                  <Image 
-                    src="/img/jal-icon.png"
-                    alt="JAL Icon"
-                    width={32}
-                    height={32}
-                    className="object-contain"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{user?.name || 'Pilot'}</p>
-                  <p className="text-xs text-gray-500">{user?.pilotId || 'N/A'}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">{user?.rank || 'Pilot'}</span>
-                <div className="flex space-x-1">
-                  {[...Array(3)].map((_, i) => (
-                    <span key={i} className="text-yellow-400">⭐</span>
-                  ))}
-                </div>
-              </div>
-              <button 
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
+            <UserProfile onLogout={handleLogout} />
           </div>
         </div>
 
         {/* Dashboard Content */}
         <div className="flex-1 p-6 space-y-6">
           {/* Welcome Section */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center space-x-3 mb-2">
-              <h2 className="text-2xl font-bold text-gray-900">Good Morning {user?.name || 'Pilot'}</h2>
-              <span className="text-2xl">{user?.country || '🇯🇵'}</span>
-            </div>
-            <p className="text-gray-600">Welcome to JAL Virtual Training Portal.</p>
-          </div>
+          <WelcomeSection />
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

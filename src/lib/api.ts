@@ -1,4 +1,4 @@
-import { AuthResponse, User } from '@/types';
+import { AuthResponse, User, JALVirtualAPIResponse } from '@/types';
 
 export class APIClient {
   private baseUrl: string;
@@ -28,17 +28,11 @@ export class APIClient {
       console.log('APIClient: X-API-Key response status:', response.status);
 
       if (response.ok) {
-        const userData = await response.json();
-        console.log('APIClient: X-API-Key user data:', userData);
+        const apiResponse: JALVirtualAPIResponse = await response.json();
+        console.log('APIClient: X-API-Key user data:', apiResponse);
         return {
           success: true,
-          user: {
-            id: userData.id || userData.pilotId || 'unknown',
-            name: userData.name || userData.displayName || 'JAL Pilot',
-            rank: userData.rank || userData.position || 'Pilot',
-            country: userData.country || '🇯🇵',
-            pilotId: userData.pilotId || userData.id || 'unknown',
-          }
+          user: apiResponse.data
         };
       }
 
@@ -57,17 +51,11 @@ export class APIClient {
       console.log('APIClient: Bearer token response status:', bearerResponse.status);
 
       if (bearerResponse.ok) {
-        const userData = await bearerResponse.json();
-        console.log('APIClient: Bearer token user data:', userData);
+        const apiResponse: JALVirtualAPIResponse = await bearerResponse.json();
+        console.log('APIClient: Bearer token user data:', apiResponse);
         return {
           success: true,
-          user: {
-            id: userData.id || userData.pilotId || 'unknown',
-            name: userData.name || userData.displayName || 'JAL Pilot',
-            rank: userData.rank || userData.position || 'Pilot',
-            country: userData.country || '🇯🇵',
-            pilotId: userData.pilotId || userData.id || 'unknown',
-          }
+          user: apiResponse.data
         };
       }
 

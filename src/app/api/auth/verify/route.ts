@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 			const raw = await res.text();
 			const body = safeJsonParse(raw);
 
-			if (res.ok) return NextResponse.json({ ok: true, user: body ?? null, via: `X-API-Key ${ep}` });
+			if (res.ok) return NextResponse.json({ ok: true, user: body?.data ?? body ?? null, via: `X-API-Key ${ep}` });
 			if (res.status !== 401)
 				return NextResponse.json({ error: "Upstream rejected", status: res.status, details: body }, { status: 502 });
 		}
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 			const raw2 = await res2.text();
 			const body2 = safeJsonParse(raw2);
 
-			if (res2.ok) return NextResponse.json({ ok: true, user: body2 ?? null, via: `Bearer ${ep}` });
+			if (res2.ok) return NextResponse.json({ ok: true, user: body2?.data ?? body2 ?? null, via: `Bearer ${ep}` });
 			if (res2.status !== 401)
 				return NextResponse.json(
 					{ error: "Upstream rejected (Bearer)", status: res2.status, details: body2 },
