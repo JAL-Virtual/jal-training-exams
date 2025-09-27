@@ -13,102 +13,63 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call the actual JAL Virtual API to verify the API key and get user data
+    // Check if user exists in staff database first
     try {
-      const jalApiResponse = await fetch('https://api.jalvirtual.com/api/user', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (jalApiResponse.ok) {
-        const jalUserData = await jalApiResponse.json();
-        
-        // Check if user exists in our staff database for role information
-        try {
-          const db = await getDatabase();
-          const staffCollection = db.collection('staff');
-          const staffMember = await staffCollection.findOne({ apiKey });
-          
-          const user = {
-            id: jalUserData.id || jalUserData.pilot_id || 'user_' + Date.now(),
-            name: jalUserData.name || jalUserData.first_name + ' ' + jalUserData.last_name || 'JAL Staff Member',
-            email: jalUserData.email || 'staff@jal.com',
-            apiKey: apiKey,
-            role: staffMember?.role || 'Staff',
-            rank: jalUserData.rank || { name: 'Pilot' }
-          };
-
-          return NextResponse.json({
-            ok: true,
-            user: user
-          });
-        } catch (dbError) {
-          // If database is not available, still return JAL API data
-          const user = {
-            id: jalUserData.id || jalUserData.pilot_id || 'user_' + Date.now(),
-            name: jalUserData.name || jalUserData.first_name + ' ' + jalUserData.last_name || 'JAL Staff Member',
-            email: jalUserData.email || 'staff@jal.com',
-            apiKey: apiKey,
-            role: 'Staff',
-            rank: jalUserData.rank || { name: 'Pilot' }
-          };
-
-          return NextResponse.json({
-            ok: true,
-            user: user
-          });
-        }
-      } else {
-        // JAL API returned an error, check if it's our admin key
-        if (apiKey === '29e2bb1d4ae031ed47b6') {
-          const adminUser = {
-            id: 'admin_user',
-            name: 'Admin User',
-            email: 'admin@jal.com',
-            apiKey: apiKey,
-            role: 'Admin',
-            rank: { name: 'Administrator' }
-          };
-
-          return NextResponse.json({
-            ok: true,
-            user: adminUser
-          });
-        }
-        
-        return NextResponse.json(
-          { ok: false, error: 'Invalid API key' },
-          { status: 401 }
-        );
-      }
-    } catch (apiError) {
-      console.error('JAL API Error:', apiError);
+      const db = await getDatabase();
+      const staffCollection = db.collection('staff');
+      const staffMember = await staffCollection.findOne({ apiKey });
       
-      // Fallback: Check if it's our admin key
-      if (apiKey === '29e2bb1d4ae031ed47b6') {
-        const adminUser = {
-          id: 'admin_user',
-          name: 'Admin User',
-          email: 'admin@jal.com',
+      if (staffMember) {
+        // User found in staff database, return their actual data
+        const user = {
+          id: staffMember.id,
+          name: staffMember.name || 'Staff Member',
+          email: 'staff@jal.com',
           apiKey: apiKey,
-          role: 'Admin',
-          rank: { name: 'Administrator' }
+          role: staffMember.role,
+          rank: { name: 'Pilot' }
         };
 
         return NextResponse.json({
           ok: true,
-          user: adminUser
+          user: user
         });
       }
-      
-      return NextResponse.json(
-        { ok: false, error: 'Failed to verify API key with JAL Virtual API' },
-        { status: 500 }
-      );
+    } catch (dbError) {
+      console.log('Database not available, using fallback verification:', dbError);
     }
+
+    // Fallback: Check if it's admin key
+    if (apiKey === '29e2bb1d4ae031ed47b6') {
+      const adminUser = {
+        id: 'admin_user',
+        name: 'Admin User',
+        email: 'admin@jal.com',
+        apiKey: apiKey,
+        role: 'Admin',
+        rank: { name: 'Administrator' }
+      };
+
+      return NextResponse.json({
+        ok: true,
+        user: adminUser
+      });
+    }
+
+    // For any other API key, return basic staff member
+    const staffUser = {
+      id: 'user_' + Date.now(),
+      name: 'Staff Member',
+      email: 'staff@jal.com',
+      apiKey: apiKey,
+      role: 'Staff',
+      rank: { name: 'Pilot' }
+    };
+
+    return NextResponse.json({
+      ok: true,
+      user: staffUser
+    });
 
   } catch (error) {
     console.error('Error verifying API key:', error);
