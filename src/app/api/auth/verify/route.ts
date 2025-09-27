@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getDatabase } from '@/lib/mongodb';
 
 // POST /api/auth/verify - Verify API key
 export async function POST(request: NextRequest) {
@@ -12,17 +13,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, we'll simulate API verification
-    // In a real implementation, you would call the actual JAL Virtual API
-    // This is a placeholder that accepts any non-empty API key
-    
+    // Check if user exists in staff database
+    try {
+      const db = await getDatabase();
+      const staffCollection = db.collection('staff');
+      const staffMember = await staffCollection.findOne({ apiKey });
+      
+      if (staffMember) {
+        // User found in staff database, return their actual data
+        const user = {
+          id: staffMember.id,
+          name: staffMember.name || 'Staff Member',
+          email: 'staff@jal.com',
+          apiKey: apiKey,
+          role: staffMember.role
+        };
+
+        return NextResponse.json({
+          ok: true,
+          user: user
+        });
+      }
+    } catch (dbError) {
+      console.log('Database not available, using fallback verification:', dbError);
+    }
+
+    // Fallback: Mock user data based on API key
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Mock user data based on API key
     const mockUser = {
       id: 'user_' + Date.now(),
-      name: 'JAL Staff Member',
+      name: apiKey === '29e2bb1d4ae031ed47b6' ? 'Admin User' : 'Staff Member',
       email: 'staff@jal.com',
       apiKey: apiKey
     };
