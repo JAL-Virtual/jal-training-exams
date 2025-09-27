@@ -66,14 +66,14 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
 
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
-      <div className="p-2 border-b border-gray-200">
-        <div className="flex items-center justify-center">
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center justify-center h-16">
           <Image 
-            src="/img/jal-logo-large.png"
+            src="/img/jal-logo.png"
             alt="JAL Logo"
-            width={160}
-            height={160}
-            className="object-contain"
+            width={120}
+            height={60}
+            className="object-contain max-w-full max-h-full"
           />
         </div>
       </div>

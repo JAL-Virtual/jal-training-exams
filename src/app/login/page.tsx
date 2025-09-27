@@ -68,10 +68,10 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <Image 
-                src="/img/jal-logo-large.png"
+                src="/img/jal-logo.png"
                 alt="JAL Logo"
                 width={120}
-                height={120}
+                height={60}
                 className="object-contain"
               />
             </div>

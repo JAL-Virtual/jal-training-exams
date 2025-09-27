@@ -71,7 +71,7 @@ export default function UserProfile({ onLogout }: UserProfileProps) {
             alt="JAL Icon"
             width={32}
             height={32}
-            className="object-contain"
+            className="object-contain w-full h-full"
           />
         </div>
         <div>
@@ -90,7 +90,7 @@ export default function UserProfile({ onLogout }: UserProfileProps) {
             alt="JAL Icon"
             width={32}
             height={32}
-            className="object-contain"
+            className="object-contain w-full h-full"
           />
         </div>
         <div>
