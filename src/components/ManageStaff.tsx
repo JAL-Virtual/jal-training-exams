@@ -2,15 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-
-interface StaffMember {
-  id: string;
-  apiKey: string;
-  role: string;
-  name?: string;
-  email?: string;
-  addedDate: string;
-}
+import { StaffMember } from '@/types/staff';
 
 export default function ManageStaff() {
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
@@ -23,22 +15,24 @@ export default function ManageStaff() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load staff members from localStorage on component mount
+  // Load staff members from API on component mount
   useEffect(() => {
-    const savedStaff = localStorage.getItem('jal_staff_members');
-    if (savedStaff) {
+    const fetchStaffMembers = async () => {
       try {
-        setStaffMembers(JSON.parse(savedStaff));
+        const response = await fetch('/api/staff');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setStaffMembers(result.staff);
+          }
+        }
       } catch (error) {
         console.error('Error loading staff members:', error);
       }
-    }
-  }, []);
+    };
 
-  // Save staff members to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('jal_staff_members', JSON.stringify(staffMembers));
-  }, [staffMembers]);
+    fetchStaffMembers();
+  }, []);
 
   const handleAddStaff = async () => {
     if (!newStaff.apiKey || !newStaff.role) {
@@ -49,36 +43,23 @@ export default function ManageStaff() {
     setIsLoading(true);
     
     try {
-      // Verify the API key by making a request to the JAL Virtual API
-      const response = await fetch('/api/auth/verify', {
+      const response = await fetch('/api/staff', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ apiKey: newStaff.apiKey }),
+        body: JSON.stringify(newStaff),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.ok && result.user) {
-          const staffMember: StaffMember = {
-            id: Date.now().toString(),
-            apiKey: newStaff.apiKey,
-            role: newStaff.role,
-            name: result.user.name || newStaff.name || 'Unknown',
-            email: result.user.email || newStaff.email || '',
-            addedDate: new Date().toISOString()
-          };
+      const result = await response.json();
 
-          setStaffMembers(prev => [...prev, staffMember]);
-          setNewStaff({ apiKey: '', role: '', name: '', email: '' });
-          setIsAddingStaff(false);
-          alert('Staff member added successfully!');
-        } else {
-          alert('Invalid API key. Please check and try again.');
-        }
+      if (result.success) {
+        setStaffMembers(prev => [...prev, result.staff]);
+        setNewStaff({ apiKey: '', role: '', name: '', email: '' });
+        setIsAddingStaff(false);
+        alert('Staff member added successfully!');
       } else {
-        alert('Failed to verify API key. Please check and try again.');
+        alert(result.error || 'Failed to add staff member');
       }
     } catch (error) {
       console.error('Error adding staff member:', error);
@@ -88,9 +69,25 @@ export default function ManageStaff() {
     }
   };
 
-  const handleRemoveStaff = (id: string) => {
+  const handleRemoveStaff = async (id: string) => {
     if (confirm('Are you sure you want to remove this staff member?')) {
-      setStaffMembers(prev => prev.filter(staff => staff.id !== id));
+      try {
+        const response = await fetch(`/api/staff?id=${id}`, {
+          method: 'DELETE',
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setStaffMembers(prev => prev.filter(staff => staff.id !== id));
+          alert('Staff member removed successfully!');
+        } else {
+          alert(result.error || 'Failed to remove staff member');
+        }
+      } catch (error) {
+        console.error('Error removing staff member:', error);
+        alert('Error removing staff member. Please try again.');
+      }
     }
   };
 

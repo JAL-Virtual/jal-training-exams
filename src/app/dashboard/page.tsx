@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { isAuthenticated } from '@/lib/api';
 import { TrainingStats, TrainingData, QuickReferenceItem } from '@/types';
 import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
@@ -40,7 +39,10 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    // Check if user is authenticated
+    const apiKey = localStorage.getItem('jal_api_key');
+    
+    if (!apiKey) {
       router.push('/login');
       return;
     }
@@ -52,7 +54,7 @@ export default function DashboardPage() {
     localStorage.removeItem('jal_api_key');
     localStorage.removeItem('jal_pilot_id');
     localStorage.removeItem('jal_user');
-    router.push('/');
+    router.push('/login');
   };
 
   if (isLoading) {

@@ -9,47 +9,60 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+  const [currentUserRole, setCurrentUserRole] = React.useState<string | null>(null);
+  const [adminKey, setAdminKey] = React.useState<string | null>(null);
+  
+  // Get admin API key from server
+  React.useEffect(() => {
+    const fetchAdminKey = async () => {
+      try {
+        const response = await fetch('/api/admin/key');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setAdminKey(result.adminKey);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching admin key:', error);
+      }
+    };
+
+    fetchAdminKey();
+  }, []);
+
   // Check for specific administrator API key
-  const isAdmin = typeof window !== 'undefined' && localStorage.getItem('jal_api_key') === '29e2bb1d4ae031ed47b6';
+  const isAdmin = typeof window !== 'undefined' && adminKey && localStorage.getItem('jal_api_key') === adminKey;
   
-  // Get current user's role from staff members
-  const getCurrentUserRole = () => {
-    if (typeof window === 'undefined') return null;
-    
-    const apiKey = localStorage.getItem('jal_api_key');
-    if (!apiKey) return null;
-    
-    const staffMembers = localStorage.getItem('jal_staff_members');
-    if (!staffMembers) return null;
-    
-    try {
-      const staff = JSON.parse(staffMembers);
-      console.log('Staff members:', staff);
-      console.log('Current API key:', apiKey);
+  // Get current user's role from API
+  React.useEffect(() => {
+    const fetchUserRole = async () => {
+      if (typeof window === 'undefined') return;
       
-      const currentStaff = staff.find((member: { apiKey: string; role: string }) => member.apiKey === apiKey);
-      console.log('Current staff member:', currentStaff);
+      const apiKey = localStorage.getItem('jal_api_key');
+      if (!apiKey) return;
       
-      return currentStaff ? currentStaff.role : null;
-    } catch (error) {
-      console.error('Error parsing staff members:', error);
-      return null;
-    }
-  };
-  
-  const currentUserRole = getCurrentUserRole();
-  
+      try {
+        const response = await fetch(`/api/staff/role?apiKey=${encodeURIComponent(apiKey)}`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setCurrentUserRole(result.role);
+            console.log('Current user role:', result.role);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
   // Role-based access control
   const canAccessTraining = currentUserRole === 'Trainer' || isAdmin;
   const canAccessExamination = currentUserRole === 'Examiner' || isAdmin;
   const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner') || isAdmin;
-  
-  // Debug logging
-  console.log('Current user role:', currentUserRole);
-  console.log('Is admin:', isAdmin);
-  console.log('Can access training:', canAccessTraining);
-  console.log('Can access examination:', canAccessExamination);
-  console.log('Can access control:', canAccessControl);
 
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
