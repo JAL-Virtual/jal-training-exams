@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface SidebarProps {
   activeSection: string;
@@ -91,18 +92,12 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             onClick={() => onSectionChange('dashboard')}
             className="hover:opacity-80 transition-opacity cursor-pointer w-full h-full flex items-center justify-center"
           >
-            <img 
+            <Image 
               src="/img/jal-logo.png"
               alt="JAL Logo"
+              width={100}
+              height={50}
               className="object-contain"
-              style={{ 
-                width: '100px', 
-                height: '50px', 
-                maxWidth: '100px', 
-                maxHeight: '50px',
-                minWidth: '100px',
-                minHeight: '50px'
-              }}
             />
           </button>
         </div>
