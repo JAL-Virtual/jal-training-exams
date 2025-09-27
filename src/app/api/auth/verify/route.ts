@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call the actual JAL Virtual API to get user data
+    // Call the JAL Virtual API to get user data
     try {
       const jalApiResponse = await fetch('https://jalvirtual.com/api/user', {
         method: 'GET',
