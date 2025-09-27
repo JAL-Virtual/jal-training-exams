@@ -10,6 +10,14 @@ interface SidebarProps {
 export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   const [currentUserRole, setCurrentUserRole] = React.useState<string | null>(null);
   const [adminKey, setAdminKey] = React.useState<string | null>(null);
+  const [expandedSections, setExpandedSections] = React.useState<{[key: string]: boolean}>({
+    dashboards: true, // Always expanded, cannot be collapsed
+    training: true,
+    examination: true,
+    resources: true,
+    control: true,
+    management: true
+  });
   
   // Get admin API key from server
   React.useEffect(() => {
@@ -63,8 +71,15 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   const canAccessExamination = currentUserRole === 'Examiner' || currentUserRole === 'Admin' || isAdmin;
   const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner' || currentUserRole === 'Admin') || isAdmin;
 
+  const toggleSection = (sectionKey: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey]
+    }));
+  };
+
   return (
-    <div className="w-64 bg-white shadow-lg border-r border-gray-200">
+    <div className="w-72 bg-white shadow-lg border-r border-gray-200">
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center h-16">
           <button 
@@ -89,7 +104,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
       </div>
 
       <nav className="p-4 space-y-2">
-        {/* DASHBOARDS */}
+        {/* DASHBOARDS - Always visible */}
         <div className="mb-6">
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">DASHBOARDS</h3>
           <div className="space-y-1">
@@ -119,26 +134,41 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         {/* TRAINING DEPARTMENT */}
         {canAccessTraining && (
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">TRAINING DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('training')}
+            <button
+              onClick={() => toggleSection('training')}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+            >
+              <span className="flex-1 text-left">TRAINING DEPARTMENT</span>
+              <svg 
+                className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.training ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                Training
-              </button>
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('approved-trainers')}
-              >
-                Approved Trainers
-              </button>
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('upcoming-training')}
-              >
-                Upcoming Training
-              </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.training ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-1 mt-2 pl-2">
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('training')}
+                >
+                  Training
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('approved-trainers')}
+                >
+                  Approved Trainers
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('upcoming-training')}
+                >
+                  Upcoming Training
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -146,78 +176,123 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         {/* EXAM DEPARTMENT */}
         {canAccessExamination && (
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">EXAM DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('request-exam')}
+            <button
+              onClick={() => toggleSection('examination')}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+            >
+              <span className="flex-1 text-left">EXAM DEPARTMENT</span>
+              <svg 
+                className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.examination ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                Request Exam
-              </button>
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('theoretical-checkout')}
-              >
-                Theoretical Checkout
-              </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.examination ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-1 mt-2 pl-2">
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('request-exam')}
+                >
+                  Request Exam
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('theoretical-checkout')}
+                >
+                  Theoretical Checkout
+                </button>
+              </div>
             </div>
           </div>
         )}
 
         {/* RESOURCES DEPARTMENT */}
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">RESOURCES DEPARTMENT</h3>
-          <div className="space-y-1">
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('local-procedures')}
+          <button
+            onClick={() => toggleSection('resources')}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+          >
+              <span className="flex-1 text-left">RESOURCES DEPARTMENT</span>
+            <svg 
+              className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.resources ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
             >
-              Local Procedures
-            </button>
-            <button 
-              className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={() => onSectionChange('charts')}
-            >
-              Charts
-            </button>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.resources ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="space-y-1 mt-2 pl-2">
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                onClick={() => onSectionChange('local-procedures')}
+              >
+                Local Procedures
+              </button>
+              <button 
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                onClick={() => onSectionChange('charts')}
+              >
+                Charts
+              </button>
+            </div>
           </div>
         </div>
 
         {/* STAFF DEPARTMENT */}
         {canAccessControl && (
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">STAFF DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('control')}
+            <button
+              onClick={() => toggleSection('control')}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+            >
+              <span className="flex-1 text-left">STAFF DEPARTMENT</span>
+              <svg 
+                className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.control ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                Control
-              </button>
-              {canAccessExamination && (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.control ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                  onClick={() => onSectionChange('examination')}
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('control')}
                 >
-                  Examination
+                  Control
                 </button>
-              )}
-              {canAccessTraining && (
-                <>
+                {canAccessExamination && (
                   <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => onSectionChange('training')}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                    onClick={() => onSectionChange('examination')}
                   >
-                    Training
+                    Examination
                   </button>
-                  <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => onSectionChange('pickup-training')}
-                  >
-                    Pickup Training
-                  </button>
-                </>
-              )}
+                )}
+                {canAccessTraining && (
+                  <>
+                    <button 
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                      onClick={() => onSectionChange('training')}
+                    >
+                      Training
+                    </button>
+                    <button 
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                      onClick={() => onSectionChange('pickup-training')}
+                    >
+                      Pickup Training
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -225,26 +300,35 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         {/* MANAGEMENT DEPARTMENT - Admin Only */}
         {isAdmin && (
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">MANAGEMENT DEPARTMENT</h3>
-            <div className="space-y-1">
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('manage-staff')}
+            <button
+              onClick={() => toggleSection('management')}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+            >
+              <span className="flex-1 text-left">MANAGEMENT DEPARTMENT</span>
+              <svg 
+                className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.management ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                Manage Staff
-              </button>
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('reports-analytics')}
-              >
-                Report & Analytics
-              </button>
-              <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={() => onSectionChange('audit-logs')}
-              >
-                Audit Logs
-              </button>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.management ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="space-y-1 mt-2 pl-2">
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('manage-staff')}
+                >
+                  Manage Staff
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1"
+                  onClick={() => onSectionChange('reports-analytics')}
+                >
+                  Report & Analytics
+                </button>
+              </div>
             </div>
           </div>
         )}
