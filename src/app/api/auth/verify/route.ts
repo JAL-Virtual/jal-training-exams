@@ -13,22 +13,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call the JAL Virtual API to get user data
+    // Call the JAL Virtual API to get user data with API key authentication
     try {
       const jalApiResponse = await fetch('https://jalvirtual.com/api/user', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'X-API-Key': apiKey,
         },
       });
 
+      console.log('JAL API Response Status:', jalApiResponse.status);
+      console.log('JAL API Response OK:', jalApiResponse.ok);
+
       if (jalApiResponse.ok) {
         const jalApiData = await jalApiResponse.json();
+        console.log('JAL API Response:', jalApiData);
         
-        // Extract user data from JAL API response
-        const jalUserData = jalApiData.data || jalApiData;
+        // Extract user data from JAL API response (phpVMS format)
+        const jalUserData = jalApiData.data;
+        console.log('Extracted User Data:', jalUserData);
         
         // Check if user exists in our staff database for role information
         try {
@@ -42,8 +47,14 @@ export async function POST(request: NextRequest) {
             email: jalUserData.email || 'staff@jal.com',
             apiKey: apiKey,
             role: staffMember?.role || 'Staff',
-            rank: jalUserData.rank || { name: 'Pilot' }
+            rank: jalUserData.rank || { name: 'Pilot' },
+            pilot_id: jalUserData.pilot_id || null,
+            home_airport: jalUserData.home_airport || null,
+            curr_airport: jalUserData.curr_airport || null,
+            airline: jalUserData.airline || null
           };
+          
+          console.log('Final User Object:', user);
 
           return NextResponse.json({
             ok: true,
@@ -58,8 +69,14 @@ export async function POST(request: NextRequest) {
             email: jalUserData.email || 'staff@jal.com',
             apiKey: apiKey,
             role: 'Staff',
-            rank: jalUserData.rank || { name: 'Pilot' }
+            rank: jalUserData.rank || { name: 'Pilot' },
+            pilot_id: jalUserData.pilot_id || null,
+            home_airport: jalUserData.home_airport || null,
+            curr_airport: jalUserData.curr_airport || null,
+            airline: jalUserData.airline || null
           };
+          
+          console.log('Fallback User Object:', user);
 
           return NextResponse.json({
             ok: true,
@@ -91,6 +108,11 @@ export async function POST(request: NextRequest) {
       }
     } catch (apiError) {
       console.error('JAL API Error:', apiError);
+      console.error('API Error Details:', {
+        message: apiError instanceof Error ? apiError.message : 'Unknown error',
+        stack: apiError instanceof Error ? apiError.stack : undefined,
+        apiKey: apiKey
+      });
       
       // Fallback: Check if it's our admin key
       if (apiKey === '29e2bb1d4ae031ed47b6') {
@@ -123,3 +145,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
