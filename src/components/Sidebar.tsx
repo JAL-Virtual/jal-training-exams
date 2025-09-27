@@ -60,9 +60,9 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   }, []);
 
   // Role-based access control
-  const canAccessTraining = currentUserRole === 'Trainer' || isAdmin;
-  const canAccessExamination = currentUserRole === 'Examiner' || isAdmin;
-  const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner') || isAdmin;
+  const canAccessTraining = currentUserRole === 'Trainer' || currentUserRole === 'Admin' || isAdmin;
+  const canAccessExamination = currentUserRole === 'Examiner' || currentUserRole === 'Admin' || isAdmin;
+  const canAccessControl = (currentUserRole === 'Trainer' || currentUserRole === 'Examiner' || currentUserRole === 'Admin') || isAdmin;
 
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">

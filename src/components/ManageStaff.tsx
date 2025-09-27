@@ -14,6 +14,8 @@ export default function ManageStaff() {
     email: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditingStaff, setIsEditingStaff] = useState<string | null>(null);
+  const [editingStaff, setEditingStaff] = useState<StaffMember | null>(null);
 
   // Load staff members from API on component mount
   useEffect(() => {
@@ -92,9 +94,84 @@ export default function ManageStaff() {
   };
 
   const roleOptions = [
-    'Examiner',
-    'Trainer'
+    { value: 'Trainer', label: 'Trainer', description: 'Can manage training sessions' },
+    { value: 'Examiner', label: 'Examiner', description: 'Can manage examinations' },
+    { value: 'Admin', label: 'Admin', description: 'Full system access' }
   ];
+
+  const handleEditStaff = (staff: StaffMember) => {
+    setEditingStaff(staff);
+    setIsEditingStaff(staff.id);
+  };
+
+  const handleUpdateStaff = async () => {
+    if (!editingStaff) return;
+
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch(`/api/staff?id=${editingStaff.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          role: editingStaff.role,
+          name: editingStaff.name,
+          email: editingStaff.email,
+          status: editingStaff.status
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStaffMembers(prev => prev.map(staff => 
+          staff.id === editingStaff.id ? result.staff : staff
+        ));
+        setIsEditingStaff(null);
+        setEditingStaff(null);
+        alert('Staff member updated successfully!');
+      } else {
+        alert(result.error || 'Failed to update staff member');
+      }
+    } catch (error) {
+      console.error('Error updating staff member:', error);
+      alert('Error updating staff member. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChangeRole = async (staffId: string, newRole: string) => {
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('/api/staff/roles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ staffId, newRole }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStaffMembers(prev => prev.map(staff => 
+          staff.id === staffId ? result.staff : staff
+        ));
+        alert(result.message);
+      } else {
+        alert(result.error || 'Failed to update staff role');
+      }
+    } catch (error) {
+      console.error('Error updating staff role:', error);
+      alert('Error updating staff role. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -146,7 +223,7 @@ export default function ManageStaff() {
               >
                 <option value="">Select a role</option>
                 {roleOptions.map(role => (
-                  <option key={role} value={role}>{role}</option>
+                  <option key={role.value} value={role.value}>{role.label}</option>
                 ))}
               </select>
             </div>
@@ -200,6 +277,7 @@ export default function ManageStaff() {
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Email</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Role</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">API Key</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Added Date</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Actions</th>
@@ -211,8 +289,33 @@ export default function ManageStaff() {
                     <td className="py-3 px-4 text-gray-900">{staff.name}</td>
                     <td className="py-3 px-4 text-gray-600">{staff.email}</td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {staff.role}
+                      <div className="flex items-center space-x-2">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          staff.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
+                          staff.role === 'Trainer' ? 'bg-blue-100 text-blue-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {staff.role}
+                        </span>
+                        <select
+                          value={staff.role}
+                          onChange={(e) => handleChangeRole(staff.id, e.target.value)}
+                          className="text-xs border border-gray-300 rounded px-1 py-0.5"
+                          disabled={isLoading}
+                        >
+                          {roleOptions.map(role => (
+                            <option key={role.value} value={role.value}>{role.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        staff.status === 'active' ? 'bg-green-100 text-green-800' :
+                        staff.status === 'inactive' ? 'bg-gray-100 text-gray-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {staff.status || 'active'}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-gray-600 font-mono text-sm">
@@ -222,12 +325,20 @@ export default function ManageStaff() {
                       {new Date(staff.addedDate).toLocaleDateString()}
                     </td>
                     <td className="py-3 px-4">
-                      <button
-                        onClick={() => handleRemoveStaff(staff.id)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      >
-                        Remove
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditStaff(staff)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleRemoveStaff(staff.id)}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
