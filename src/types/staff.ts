@@ -1,10 +1,11 @@
+import { ObjectId } from 'mongodb';
+
 export interface StaffMember {
-  _id?: string;
+  _id?: ObjectId | string;
   id: string;
   apiKey: string;
   role: 'Trainer' | 'Examiner' | 'Admin';
   name?: string;
-  email?: string;
   addedDate: string;
   lastActive?: string;
   permissions?: string[];
@@ -15,13 +16,11 @@ export interface CreateStaffMemberRequest {
   apiKey: string;
   role: 'Trainer' | 'Examiner' | 'Admin';
   name?: string;
-  email?: string;
 }
 
 export interface UpdateStaffMemberRequest {
   role?: 'Trainer' | 'Examiner' | 'Admin';
   name?: string;
-  email?: string;
   status?: 'active' | 'inactive' | 'suspended';
   permissions?: string[];
 }

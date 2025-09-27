@@ -10,12 +10,9 @@ export default function ManageStaff() {
   const [newStaff, setNewStaff] = useState({
     apiKey: '',
     role: '',
-    name: '',
-    email: ''
+    name: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isEditingStaff, setIsEditingStaff] = useState<string | null>(null);
-  const [editingStaff, setEditingStaff] = useState<StaffMember | null>(null);
 
   // Load staff members from API on component mount
   useEffect(() => {
@@ -57,7 +54,7 @@ export default function ManageStaff() {
 
       if (result.success) {
         setStaffMembers(prev => [...prev, result.staff]);
-        setNewStaff({ apiKey: '', role: '', name: '', email: '' });
+        setNewStaff({ apiKey: '', role: '', name: '' });
         setIsAddingStaff(false);
         alert('Staff member added successfully!');
       } else {
@@ -100,47 +97,8 @@ export default function ManageStaff() {
   ];
 
   const handleEditStaff = (staff: StaffMember) => {
-    setEditingStaff(staff);
-    setIsEditingStaff(staff.id);
-  };
-
-  const handleUpdateStaff = async () => {
-    if (!editingStaff) return;
-
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch(`/api/staff?id=${editingStaff.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role: editingStaff.role,
-          name: editingStaff.name,
-          email: editingStaff.email,
-          status: editingStaff.status
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setStaffMembers(prev => prev.map(staff => 
-          staff.id === editingStaff.id ? result.staff : staff
-        ));
-        setIsEditingStaff(null);
-        setEditingStaff(null);
-        alert('Staff member updated successfully!');
-      } else {
-        alert(result.error || 'Failed to update staff member');
-      }
-    } catch (error) {
-      console.error('Error updating staff member:', error);
-      alert('Error updating staff member. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    // Edit functionality can be implemented later if needed
+    console.log('Edit staff:', staff);
   };
 
   const handleChangeRole = async (staffId: string, newRole: string) => {
@@ -199,7 +157,7 @@ export default function ManageStaff() {
           className="bg-white rounded-lg shadow-sm p-6"
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Staff Member</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 API Key *
@@ -227,6 +185,8 @@ export default function ManageStaff() {
                 ))}
               </select>
             </div>
+          </div>
+          <div className="mt-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Name (Optional)
@@ -251,7 +211,7 @@ export default function ManageStaff() {
             <button
               onClick={() => {
                 setIsAddingStaff(false);
-                setNewStaff({ apiKey: '', role: '', name: '', email: '' });
+                setNewStaff({ apiKey: '', role: '', name: '' });
               }}
               className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
             >
@@ -275,7 +235,6 @@ export default function ManageStaff() {
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-700">Email</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Role</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-700">API Key</th>
@@ -287,7 +246,6 @@ export default function ManageStaff() {
                 {staffMembers.map((staff) => (
                   <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4 text-gray-900">{staff.name}</td>
-                    <td className="py-3 px-4 text-gray-600">{staff.email}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

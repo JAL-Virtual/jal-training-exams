@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ 
       success: true, 
-      staff: updatedStaff,
+      staff: updatedStaff ? { ...updatedStaff, _id: updatedStaff._id?.toString() } : null,
       message: `Staff member role updated to ${newRole}`
     });
   } catch (error) {

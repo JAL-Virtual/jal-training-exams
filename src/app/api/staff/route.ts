@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
-import { StaffMember, CreateStaffMemberRequest, UpdateStaffMemberRequest } from '@/types/staff';
+import { CreateStaffMemberRequest, UpdateStaffMemberRequest } from '@/types/staff';
 
 // GET /api/staff - Get all staff members
 export async function GET() {
@@ -10,9 +10,15 @@ export async function GET() {
     
     const staffMembers = await staffCollection.find({}).toArray();
     
+    // Convert ObjectId to string for JSON response
+    const formattedStaff = staffMembers.map(staff => ({
+      ...staff,
+      _id: staff._id?.toString()
+    }));
+    
     return NextResponse.json({ 
       success: true, 
-      staff: staffMembers 
+      staff: formattedStaff 
     });
   } catch (error) {
     console.error('Error fetching staff members:', error);
@@ -27,7 +33,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body: CreateStaffMemberRequest = await request.json();
-    const { apiKey, role, name, email } = body;
+    const { apiKey, role, name } = body;
 
     if (!apiKey || !role) {
       return NextResponse.json(
@@ -79,12 +85,11 @@ export async function POST(request: NextRequest) {
       Admin: ['*'] // Admin has all permissions
     };
 
-    const staffMember: StaffMember = {
+    const staffMember = {
       id: Date.now().toString(),
       apiKey,
       role,
       name: verifyResult.user.name || name || 'Unknown',
-      email: verifyResult.user.email || email || '',
       addedDate: new Date().toISOString(),
       lastActive: new Date().toISOString(),
       permissions: rolePermissions[role] || [],
@@ -95,7 +100,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ 
       success: true, 
-      staff: { ...staffMember, _id: result.insertedId }
+      staff: { ...staffMember, _id: result.insertedId.toString() }
     });
   } catch (error) {
     console.error('Error adding staff member:', error);
@@ -130,7 +135,7 @@ export async function PUT(request: NextRequest) {
       Admin: ['*'] // Admin has all permissions
     };
 
-    const updateData: any = {
+    const updateData: Record<string, string | string[]> = {
       lastActive: new Date().toISOString()
     };
 
@@ -139,7 +144,6 @@ export async function PUT(request: NextRequest) {
       updateData.permissions = rolePermissions[body.role] || [];
     }
     if (body.name) updateData.name = body.name;
-    if (body.email) updateData.email = body.email;
     if (body.status) updateData.status = body.status;
     if (body.permissions) updateData.permissions = body.permissions;
 
@@ -159,7 +163,7 @@ export async function PUT(request: NextRequest) {
     
     return NextResponse.json({ 
       success: true, 
-      staff: updatedStaff 
+      staff: updatedStaff ? { ...updatedStaff, _id: updatedStaff._id?.toString() } : null
     });
   } catch (error) {
     console.error('Error updating staff member:', error);
