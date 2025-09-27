@@ -9,6 +9,7 @@ import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
 import Sidebar from '@/components/Sidebar';
 import ManageStaff from '@/components/ManageStaff';
+import ApprovalTrainer from '@/components/ApprovalTrainer';
 
 
 
@@ -16,10 +17,10 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [stats] = useState<TrainingStats>({
+  const [stats, setStats] = useState<TrainingStats>({
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
-    totalTrainers: 12,
+    totalTrainers: 0,
     totalExaminers: 8
   });
 
@@ -32,6 +33,25 @@ export default function DashboardPage() {
       return;
     }
     
+    // Fetch trainer count
+    const fetchTrainerCount = async () => {
+      try {
+        const response = await fetch('/api/trainers');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setStats(prev => ({
+              ...prev,
+              totalTrainers: data.trainers.length
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching trainer count:', error);
+      }
+    };
+
+    fetchTrainerCount();
     setIsLoading(false);
   }, [router]);
 
@@ -40,6 +60,23 @@ export default function DashboardPage() {
     localStorage.removeItem('jal_pilot_id');
     localStorage.removeItem('jal_user');
     router.push('/login');
+  };
+
+  const refreshTrainerCount = async () => {
+    try {
+      const response = await fetch('/api/trainers');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setStats(prev => ({
+            ...prev,
+            totalTrainers: data.trainers.length
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching trainer count:', error);
+    }
   };
 
   if (isLoading) {
@@ -91,72 +128,79 @@ export default function DashboardPage() {
         {/* Dashboard Content */}
         <div className="flex-1 p-6 space-y-6">
           {/* Conditional Content Based on Active Section */}
-          {activeSection === 'manage-staff' ? (
-            <ManageStaff />
-          ) : activeSection === 'reports-analytics' ? (
-            <div className="space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
-                    <p className="text-gray-600 mt-1">Training reports and analytics dashboard</p>
+          {(() => {
+            if (activeSection === 'manage-staff') {
+              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+            } else if (activeSection === 'approved-trainers') {
+              return <ApprovalTrainer showAddForm={false} />;
+            } else if (activeSection === 'reports-analytics') {
+              return (
+                <div className="space-y-6">
+                  {/* Header */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
+                        <p className="text-gray-600 mt-1">Training reports and analytics dashboard</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Blank Content Area */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Reports & Analytics</h3>
+                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
+                      <p className="text-sm text-gray-400">Training reports and analytics will be available here soon.</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              );
+            } else {
+              // Default dashboard content
+              return (
+                <>
+                  {/* Welcome Section */}
+                  <WelcomeSection />
 
-              {/* Blank Content Area */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+                  {/* Summary Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <motion.div 
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Requested</h3>
+                      <p className="text-3xl font-bold">{stats.totalTrainingRequested}</p>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Completed</h3>
+                      <p className="text-3xl font-bold">{stats.totalTrainingCompleted}</p>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <h3 className="text-sm font-medium opacity-90 mb-2">Total Available Trainers/Examiners</h3>
+                      <p className="text-3xl font-bold">{stats.totalTrainers}/{stats.totalExaminers}</p>
+                    </motion.div>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Reports & Analytics</h3>
-                  <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                  <p className="text-sm text-gray-400">Training reports and analytics will be available here soon.</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <>
-              {/* Welcome Section */}
-              <WelcomeSection />
-
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <motion.div 
-              className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Requested</h3>
-              <p className="text-3xl font-bold">{stats.totalTrainingRequested}</p>
-            </motion.div>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Completed</h3>
-              <p className="text-3xl font-bold">{stats.totalTrainingCompleted}</p>
-            </motion.div>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-sm font-medium opacity-90 mb-2">Total Available Trainers/Examiners</h3>
-              <p className="text-3xl font-bold">{stats.totalTrainers}/{stats.totalExaminers}</p>
-            </motion.div>
-          </div>
-
-
-            </>
-          )}
+                </>
+              );
+            }
+          })()}
         </div>
       </div>
     </div>

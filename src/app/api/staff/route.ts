@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
           );
         }
       }
-    } catch (apiError) {
+    } catch (_error) {
       // Check if it's the admin key
       if (apiKey === '29e2bb1d4ae031ed47b6') {
         // Admin key is valid, continue
