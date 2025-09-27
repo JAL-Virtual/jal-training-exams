@@ -68,13 +68,18 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     <div className="w-64 bg-white shadow-lg border-r border-gray-200">
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center h-16">
-          <Image 
-            src="/img/jal-logo.png"
-            alt="JAL Logo"
-            width={120}
-            height={60}
-            className="object-contain max-w-full max-h-full"
-          />
+          <button 
+            onClick={() => onSectionChange('dashboard')}
+            className="hover:opacity-80 transition-opacity cursor-pointer"
+          >
+            <Image 
+              src="/img/jal-logo.png"
+              alt="JAL Logo"
+              width={120}
+              height={60}
+              className="object-contain max-w-full max-h-full"
+            />
+          </button>
         </div>
       </div>
 
