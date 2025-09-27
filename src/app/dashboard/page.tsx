@@ -10,6 +10,7 @@ import WelcomeSection from '@/components/WelcomeSection';
 import Sidebar from '@/components/Sidebar';
 import ManageStaff from '@/components/ManageStaff';
 import ApprovalTrainer from '@/components/ApprovalTrainer';
+import ApprovalExaminer from '@/components/ApprovalExaminer';
 
 
 
@@ -131,8 +132,14 @@ export default function DashboardPage() {
           {(() => {
             if (activeSection === 'manage-staff') {
               return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+            } else if (activeSection === 'training-staff-management') {
+              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+            } else if (activeSection === 'examiner-staff-management') {
+              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
             } else if (activeSection === 'approved-trainers') {
               return <ApprovalTrainer showAddForm={false} />;
+            } else if (activeSection === 'approved-examiners') {
+              return <ApprovalExaminer showAddForm={false} />;
             } else if (activeSection === 'my-training') {
               return (
                 <div className="space-y-6">
