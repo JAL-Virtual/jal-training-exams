@@ -5,6 +5,17 @@ import { CreateStaffMemberRequest, UpdateStaffMemberRequest } from '@/types/staf
 // GET /api/staff - Get all staff members
 export async function GET() {
   try {
+    console.log('GET /api/staff - Starting request');
+    
+    // Check if DATABASE_URL is set
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL environment variable is not set');
+      return NextResponse.json(
+        { success: false, error: 'Database configuration missing' },
+        { status: 500 }
+      );
+    }
+    
     const db = await getDatabase();
     const staffCollection = db.collection('staff');
     
@@ -16,12 +27,18 @@ export async function GET() {
       _id: staff._id?.toString()
     }));
     
+    console.log(`GET /api/staff - Found ${formattedStaff.length} staff members`);
+    
     return NextResponse.json({ 
       success: true, 
       staff: formattedStaff 
     });
   } catch (error) {
     console.error('Error fetching staff members:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
       { success: false, error: 'Failed to fetch staff members' },
       { status: 500 }
@@ -32,8 +49,21 @@ export async function GET() {
 // POST /api/staff - Add a new staff member
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/staff - Starting request');
+    
+    // Check if DATABASE_URL is set
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL environment variable is not set');
+      return NextResponse.json(
+        { success: false, error: 'Database configuration missing' },
+        { status: 500 }
+      );
+    }
+    
     const body: CreateStaffMemberRequest = await request.json();
     const { apiKey, role, name } = body;
+
+    console.log('POST /api/staff - Request body:', { apiKey: apiKey?.substring(0, 8) + '...', role, name });
 
     if (!apiKey || !role) {
       return NextResponse.json(
@@ -114,6 +144,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error adding staff member:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return NextResponse.json(
       { success: false, error: 'Failed to add staff member' },
       { status: 500 }
