@@ -11,6 +11,7 @@ import Sidebar from '@/components/Sidebar';
 import ManageStaff from '@/components/ManageStaff';
 import ApprovalTrainer from '@/components/ApprovalTrainer';
 import ApprovalExaminer from '@/components/ApprovalExaminer';
+import ComingSoon from '@/components/ComingSoon';
 
 
 
@@ -142,131 +143,172 @@ export default function DashboardPage() {
               return <ApprovalExaminer showAddForm={false} />;
             } else if (activeSection === 'my-training') {
               return (
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">My Training</h2>
-                        <p className="text-gray-600 mt-1">View your assigned training sessions</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">My Training</h3>
-                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                      <p className="text-sm text-gray-400">Your personal training sessions will be displayed here.</p>
-                    </div>
-                  </div>
-                </div>
+                <ComingSoon 
+                  title="My Training" 
+                  description="View your assigned training sessions"
+                  color="blue"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  }
+                />
               );
             } else if (activeSection === 'pending-training') {
               return (
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Pending Training</h2>
-                        <p className="text-gray-600 mt-1">Training sessions awaiting completion</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Pending Training</h3>
-                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                      <p className="text-sm text-gray-400">Pending training sessions will be listed here.</p>
-                    </div>
-                  </div>
-                </div>
+                <ComingSoon 
+                  title="Pending Training" 
+                  description="Training sessions awaiting completion"
+                  color="yellow"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  }
+                />
               );
             } else if (activeSection === 'completed-training') {
               return (
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Completed Training</h2>
-                        <p className="text-gray-600 mt-1">View your completed training sessions</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Completed Training</h3>
-                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                      <p className="text-sm text-gray-400">Your completed training sessions will be displayed here.</p>
-                    </div>
-                  </div>
-                </div>
+                <ComingSoon 
+                  title="Completed Training" 
+                  description="View your completed training sessions"
+                  color="green"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  }
+                />
               );
             } else if (activeSection === 'theoretical-check') {
               return (
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Theoretical Check</h2>
-                        <p className="text-gray-600 mt-1">Complete theoretical knowledge assessments</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Theoretical Check</h3>
-                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                      <p className="text-sm text-gray-400">Theoretical knowledge assessments will be available here.</p>
-                    </div>
-                  </div>
-                </div>
+                <ComingSoon 
+                  title="Theoretical Check" 
+                  description="Complete theoretical knowledge assessments"
+                  color="purple"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  }
+                />
               );
             } else if (activeSection === 'reports-analytics') {
               return (
-                <div className="space-y-6">
-                  {/* Header */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
-                        <p className="text-gray-600 mt-1">Training reports and analytics dashboard</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Blank Content Area */}
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Reports & Analytics</h3>
-                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
-                      <p className="text-sm text-gray-400">Training reports and analytics will be available here soon.</p>
-                    </div>
-                  </div>
-                </div>
+                <ComingSoon 
+                  title="Reports & Analytics" 
+                  description="Training reports and analytics dashboard"
+                  color="gray"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'upcoming-training') {
+              return (
+                <ComingSoon 
+                  title="Upcoming Training" 
+                  description="View scheduled training sessions"
+                  color="blue"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'request-exam') {
+              return (
+                <ComingSoon 
+                  title="Request Exam" 
+                  description="Request examination sessions"
+                  color="purple"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'theoretical-checkout') {
+              return (
+                <ComingSoon 
+                  title="Theoretical Checkout" 
+                  description="Complete theoretical checkout procedures"
+                  color="purple"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'local-procedures') {
+              return (
+                <ComingSoon 
+                  title="Local Procedures" 
+                  description="Access local airport procedures and guidelines"
+                  color="green"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'charts') {
+              return (
+                <ComingSoon 
+                  title="Charts" 
+                  description="Access aviation charts and navigation aids"
+                  color="blue"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'training-control') {
+              return (
+                <ComingSoon 
+                  title="Training Control" 
+                  description="Control and manage training operations"
+                  color="blue"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'pickup-training') {
+              return (
+                <ComingSoon 
+                  title="Pickup Training" 
+                  description="Schedule and manage pickup training sessions"
+                  color="green"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  }
+                />
+              );
+            } else if (activeSection === 'examination') {
+              return (
+                <ComingSoon 
+                  title="Examination Control" 
+                  description="Control and manage examination operations"
+                  color="purple"
+                  icon={
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  }
+                />
               );
             } else {
               // Default dashboard content
