@@ -96,40 +96,6 @@ export default function ManageStaff() {
     { value: 'Admin', label: 'Admin', description: 'Full system access' }
   ];
 
-  const handleEditStaff = (staff: StaffMember) => {
-    // Edit functionality can be implemented later if needed
-    console.log('Edit staff:', staff);
-  };
-
-  const handleChangeRole = async (staffId: string, newRole: string) => {
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch('/api/staff/roles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ staffId, newRole }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setStaffMembers(prev => prev.map(staff => 
-          staff.id === staffId ? result.staff : staff
-        ));
-        alert(result.message);
-      } else {
-        alert(result.error || 'Failed to update staff role');
-      }
-    } catch (error) {
-      console.error('Error updating staff role:', error);
-      alert('Error updating staff role. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -247,25 +213,13 @@ export default function ManageStaff() {
                   <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4 text-gray-900">{staff.name}</td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center space-x-2">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          staff.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
-                          staff.role === 'Trainer' ? 'bg-blue-100 text-blue-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
-                          {staff.role}
-                        </span>
-                        <select
-                          value={staff.role}
-                          onChange={(e) => handleChangeRole(staff.id, e.target.value)}
-                          className="text-xs border border-gray-300 rounded px-1 py-0.5"
-                          disabled={isLoading}
-                        >
-                          {roleOptions.map(role => (
-                            <option key={role.value} value={role.value}>{role.label}</option>
-                          ))}
-                        </select>
-                      </div>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        staff.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
+                        staff.role === 'Trainer' ? 'bg-blue-100 text-blue-800' :
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {staff.role}
+                      </span>
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -283,20 +237,12 @@ export default function ManageStaff() {
                       {new Date(staff.addedDate).toLocaleDateString()}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleEditStaff(staff)}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleRemoveStaff(staff.id)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => handleRemoveStaff(staff.id)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        Remove
+                      </button>
                     </td>
                   </tr>
                 ))}
