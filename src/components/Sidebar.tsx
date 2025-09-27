@@ -18,6 +18,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     control: true,
     management: true
   });
+  const [expandedTrainingSubs, setExpandedTrainingSubs] = React.useState(false);
   
   // Get admin API key from server
   React.useEffect(() => {
@@ -76,6 +77,10 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
       ...prev,
       [sectionKey]: !prev[sectionKey]
     }));
+  };
+
+  const toggleTrainingSubs = () => {
+    setExpandedTrainingSubs(prev => !prev);
   };
 
   return (
@@ -145,14 +150,66 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.training ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                  onClick={() => onSectionChange('training')}
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center justify-between"
+                  onClick={toggleTrainingSubs}
                 >
-                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Training
+                  </div>
+                  <svg 
+                    className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ${expandedTrainingSubs ? 'rotate-180 text-blue-500' : 'text-gray-400'}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
-                  Training
                 </button>
+                
+                {/* Training Sub-buttons */}
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedTrainingSubs ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="ml-6 space-y-1">
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                    onClick={() => onSectionChange('my-training')}
+                  >
+                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    My Training
+                  </button>
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                    onClick={() => onSectionChange('pending-training')}
+                  >
+                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pending Training
+                  </button>
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                    onClick={() => onSectionChange('completed-training')}
+                  >
+                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Completed Training
+                  </button>
+                  <button 
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                    onClick={() => onSectionChange('theoretical-check')}
+                  >
+                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Theoretical Check
+                  </button>
+                  </div>
+                </div>
                 <button 
                   className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('approved-trainers')}

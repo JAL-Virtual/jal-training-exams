@@ -133,6 +133,106 @@ export default function DashboardPage() {
               return <ManageStaff onTrainerChange={refreshTrainerCount} />;
             } else if (activeSection === 'approved-trainers') {
               return <ApprovalTrainer showAddForm={false} />;
+            } else if (activeSection === 'my-training') {
+              return (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">My Training</h2>
+                        <p className="text-gray-600 mt-1">View your assigned training sessions</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">My Training</h3>
+                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
+                      <p className="text-sm text-gray-400">Your personal training sessions will be displayed here.</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            } else if (activeSection === 'pending-training') {
+              return (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Pending Training</h2>
+                        <p className="text-gray-600 mt-1">Training sessions awaiting completion</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Pending Training</h3>
+                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
+                      <p className="text-sm text-gray-400">Pending training sessions will be listed here.</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            } else if (activeSection === 'completed-training') {
+              return (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Completed Training</h2>
+                        <p className="text-gray-600 mt-1">View your completed training sessions</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Completed Training</h3>
+                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
+                      <p className="text-sm text-gray-400">Your completed training sessions will be displayed here.</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            } else if (activeSection === 'theoretical-check') {
+              return (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Theoretical Check</h2>
+                        <p className="text-gray-600 mt-1">Complete theoretical knowledge assessments</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Theoretical Check</h3>
+                      <p className="text-gray-500 mb-4">This section is currently under development.</p>
+                      <p className="text-sm text-gray-400">Theoretical knowledge assessments will be available here.</p>
+                    </div>
+                  </div>
+                </div>
+              );
             } else if (activeSection === 'reports-analytics') {
               return (
                 <div className="space-y-6">
