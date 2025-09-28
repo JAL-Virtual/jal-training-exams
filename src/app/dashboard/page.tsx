@@ -23,7 +23,7 @@ export default function DashboardPage() {
     totalTrainingRequested: 15,
     totalTrainingCompleted: 89,
     totalTrainers: 0,
-    totalExaminers: 8
+    totalExaminers: 0
   });
 
   useEffect(() => {
@@ -53,7 +53,26 @@ export default function DashboardPage() {
       }
     };
 
+    // Fetch examiner count
+    const fetchExaminerCount = async () => {
+      try {
+        const response = await fetch('/api/examiners');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setStats(prev => ({
+              ...prev,
+              totalExaminers: data.examiners.length
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching examiner count:', error);
+      }
+    };
+
     fetchTrainerCount();
+    fetchExaminerCount();
     setIsLoading(false);
   }, [router]);
 
@@ -64,20 +83,33 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
-  const refreshTrainerCount = async () => {
+  const refreshStaffCounts = async () => {
     try {
-      const response = await fetch('/api/trainers');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
+      // Fetch trainer count
+      const trainerResponse = await fetch('/api/trainers');
+      if (trainerResponse.ok) {
+        const trainerData = await trainerResponse.json();
+        if (trainerData.success) {
           setStats(prev => ({
             ...prev,
-            totalTrainers: data.trainers.length
+            totalTrainers: trainerData.trainers.length
+          }));
+        }
+      }
+
+      // Fetch examiner count
+      const examinerResponse = await fetch('/api/examiners');
+      if (examinerResponse.ok) {
+        const examinerData = await examinerResponse.json();
+        if (examinerData.success) {
+          setStats(prev => ({
+            ...prev,
+            totalExaminers: examinerData.examiners.length
           }));
         }
       }
     } catch (error) {
-      console.error('Error fetching trainer count:', error);
+      console.error('Error fetching staff counts:', error);
     }
   };
 
@@ -132,11 +164,11 @@ export default function DashboardPage() {
           {/* Conditional Content Based on Active Section */}
           {(() => {
             if (activeSection === 'manage-staff') {
-              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+              return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'training-staff-management') {
-              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+              return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'examiner-staff-management') {
-              return <ManageStaff onTrainerChange={refreshTrainerCount} />;
+              return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'approved-trainers') {
               return <ApprovalTrainer showAddForm={false} />;
             } else if (activeSection === 'approved-examiners') {

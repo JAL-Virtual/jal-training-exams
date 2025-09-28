@@ -199,6 +199,8 @@ export default function ManageStaff({ onTrainerChange }: ManageStaffProps) {
           const examinersResult = await examinersResponse.json();
           if (examinersResult.success) {
             setExaminers(examinersResult.examiners);
+            // Notify parent component to refresh examiner count
+            onTrainerChange?.();
           }
         }
       } else {
@@ -270,6 +272,8 @@ export default function ManageStaff({ onTrainerChange }: ManageStaffProps) {
         if (result.success) {
           setExaminers(prev => prev.filter(examiner => examiner.id !== id));
           alert('Examiner deleted successfully!');
+          // Notify parent component to refresh examiner count
+          onTrainerChange?.();
         } else {
           alert(result.error || 'Failed to delete examiner');
         }
