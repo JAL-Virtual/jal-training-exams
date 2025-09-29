@@ -26,56 +26,19 @@ export default function NotificationBar() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        // For now, we'll use mock data. In a real system, this would fetch from an API
-        const mockNotifications: Notification[] = [
-          {
-            id: '1',
-            type: 'success',
-            title: 'Inactivation Request Approved',
-            message: 'Your request to set inactive from Jan 15 to Feb 15 has been approved by the administrator.',
-            timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-            read: false,
-            action: {
-              type: 'inactivation_approved',
-              data: {
-                period: 'Jan 15 - Feb 15',
-                days: '30'
-              }
-            }
-          },
-          {
-            id: '2',
-            type: 'info',
-            title: 'Status Change Notification',
-            message: 'Your trainer status has been changed to Active. You will now receive training assignments.',
-            timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
-            read: false,
-            action: {
-              type: 'status_changed',
-              data: {
-                role: 'trainer',
-                status: 'active'
-              }
-            }
-          },
-          {
-            id: '3',
-            type: 'warning',
-            title: 'Inactivation Request Denied',
-            message: 'Your request to set inactive has been denied. Please contact the administrator for more information.',
-            timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-            read: true,
-            action: {
-              type: 'inactivation_denied',
-              data: {
-                reason: 'Insufficient justification provided'
-              }
-            }
+        // Fetch real notifications from database
+        const response = await fetch('/api/notifications');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setNotifications(result.notifications);
+            setUnreadCount(result.notifications.filter((n: Notification) => !n.read).length);
+          } else {
+            logger.error('Failed to fetch notifications', { error: result.error });
           }
-        ];
-        
-        setNotifications(mockNotifications);
-        setUnreadCount(mockNotifications.filter(n => !n.read).length);
+        } else {
+          logger.error('Error fetching notifications', { status: response.status });
+        }
       } catch (error) {
         logger.error('Error loading notifications', { 
           message: error instanceof Error ? error.message : String(error) 
@@ -84,25 +47,11 @@ export default function NotificationBar() {
     };
 
     fetchNotifications();
-  }, []);
 
-  // Simulate real-time notifications (in a real system, this would be WebSocket or polling)
-  useEffect(() => {
+    // Real-time notifications polling (in a real system, this would be WebSocket)
     const interval = setInterval(() => {
-      // Simulate new notifications occasionally
-      if (Math.random() < 0.1) { // 10% chance every 30 seconds
-        const newNotification: Notification = {
-          id: Date.now().toString(),
-          type: 'info',
-          title: 'System Update',
-          message: 'The training system has been updated with new features.',
-          timestamp: new Date().toISOString(),
-          read: false
-        };
-        
-        setNotifications(prev => [newNotification, ...prev]);
-        setUnreadCount(prev => prev + 1);
-      }
+      // Poll for new notifications from database
+      fetchNotifications();
     }, 30000); // Check every 30 seconds
 
     return () => clearInterval(interval);

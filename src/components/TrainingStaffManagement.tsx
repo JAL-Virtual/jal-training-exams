@@ -89,6 +89,27 @@ interface Pilot {
   rating?: string;
 }
 
+interface StaffMember {
+  _id?: string;
+  id?: string;
+  apiKey: string;
+  role: 'Trainer' | 'Examiner' | 'Admin';
+  name?: string;
+  addedDate: string;
+  lastActive?: string;
+  permissions?: string[];
+  status: 'active' | 'inactive' | 'suspended';
+  jalId?: string;
+  pilot_id?: string;
+  email?: string;
+  division?: string;
+  department?: string;
+  rank?: {
+    name: string;
+  };
+  rating?: string;
+}
+
 export default function TrainingStaffManagement({ onTrainerChange }: TrainingStaffManagementProps) {
   const [currentUser, setCurrentUser] = useState<{name: string, role: string} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -217,32 +238,26 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
 
     const fetchPilots = async () => {
       try {
-        const apiKey = localStorage.getItem('jal_api_key');
-        if (!apiKey) return;
-
-        // Fetch pilots from JAL API using the logged-in user's API key
-        const response = await fetch('/api/auth/verify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ apiKey }),
-        });
-
+        // Fetch all staff members from database
+        const response = await fetch('/api/staff');
         if (response.ok) {
           const result = await response.json();
-          if (result.success && result.data) {
-            // Transform the API response to match our Pilot interface
-            const pilotData: Pilot[] = [{
-              id: result.data.id || Date.now().toString(),
-              name: result.data.name || 'Unknown Pilot',
-              jalId: result.data.jalId || result.data.id || 'N/A',
-              email: result.data.email,
-              division: result.data.division,
-              rating: result.data.rating
-            }];
+          if (result.success && result.staff) {
+            // Transform staff data to match our Pilot interface
+            const pilotData: Pilot[] = result.staff.map((staff: StaffMember) => ({
+              id: staff._id || staff.id || Date.now().toString(),
+              name: staff.name || 'Unknown Staff',
+              jalId: staff.jalId || staff.pilot_id || 'N/A',
+              email: staff.email,
+              division: staff.division || staff.department,
+              rating: staff.rank?.name || staff.rating
+            }));
             setPilots(pilotData);
+          } else {
+            logger.error('Failed to fetch pilots', { error: result.error });
           }
+        } else {
+          logger.error('Error fetching pilots', { status: response.status });
         }
       } catch (error) {
         logger.error('Error loading pilots', { 
@@ -665,7 +680,28 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
             </div>
             
             <div className="grid gap-4">
-              {courses.map((course) => (
+              {courses.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No courses yet</h3>
+                  <p className="text-gray-500 mb-4">Create your first course to get started with training management.</p>
+                  <button
+                    onClick={() => {
+                      setEditingCourse(null);
+                      setNewCourse({ title: '', description: '', status: 'draft', category: '', sections: [] });
+                      setShowCourseForm(true);
+                    }}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Create Your First Course
+                  </button>
+                </div>
+              ) : (
+                courses.map((course) => (
                 <div key={course.id} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex justify-between items-start">
                     <div className="flex items-start space-x-3">
@@ -714,20 +750,42 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
                         Edit
                       </button>
                       <button 
-                        onClick={() => {
+                        onClick={async () => {
                           if (confirm(`Are you sure you want to delete "${course.title}"?`)) {
-                            // TODO: Implement course deletion
-                            setCourses(prev => prev.filter(c => c.id !== course.id));
+                            setIsLoading(true);
+                            try {
+                              const response = await fetch(`/api/courses/${course.id}`, {
+                                method: 'DELETE',
+                              });
+
+                              const result = await response.json();
+                              if (result.success) {
+                                // Remove from local state
+                                setCourses(prev => prev.filter(c => c.id !== course.id));
+                                alert('Course deleted successfully!');
+                              } else {
+                                alert(result.error || 'Failed to delete course');
+                              }
+                            } catch (error) {
+                              logger.error('Error deleting course', { 
+                                message: error instanceof Error ? error.message : String(error) 
+                              });
+                              alert('Error deleting course. Please try again.');
+                            } finally {
+                              setIsLoading(false);
+                            }
                           }
                         }}
                         className="text-red-600 hover:text-red-800 text-sm"
+                        disabled={isLoading}
                       >
                         Delete
                       </button>
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+              )}
             </div>
           </div>
         )}
@@ -819,23 +877,41 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
                           !students.some(student => 
                             student.jalId === pilot.jalId && student.courseId === selectedCourse.id
                           )
-                        ).map((pilot) => (
-                          <tr key={pilot.id} className="border-b border-gray-100">
-                            <td className="py-3 px-4 text-gray-900">{pilot.name}</td>
-                            <td className="py-3 px-4 text-gray-600">{pilot.jalId}</td>
-                            <td className="py-3 px-4 text-gray-600">{pilot.division || 'N/A'}</td>
-                            <td className="py-3 px-4 text-gray-600">{pilot.rating || 'N/A'}</td>
-                            <td className="py-3 px-4">
-                              <button
-                                onClick={() => handleAddStudent(pilot, selectedCourse.id)}
-                                disabled={isLoading}
-                                className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                              >
-                                Add to Course
-                              </button>
+                        ).length === 0 ? (
+                          <tr>
+                            <td colSpan={5} className="py-8 text-center text-gray-500">
+                              <div className="flex flex-col items-center">
+                                <svg className="w-12 h-12 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                </svg>
+                                <p className="text-sm">No available pilots to enroll</p>
+                                <p className="text-xs text-gray-400 mt-1">Add staff members to the system first</p>
+                              </div>
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          pilots.filter(pilot => 
+                            !students.some(student => 
+                              student.jalId === pilot.jalId && student.courseId === selectedCourse.id
+                            )
+                          ).map((pilot) => (
+                            <tr key={pilot.id} className="border-b border-gray-100">
+                              <td className="py-3 px-4 text-gray-900">{pilot.name}</td>
+                              <td className="py-3 px-4 text-gray-600">{pilot.jalId}</td>
+                              <td className="py-3 px-4 text-gray-600">{pilot.division || 'N/A'}</td>
+                              <td className="py-3 px-4 text-gray-600">{pilot.rating || 'N/A'}</td>
+                              <td className="py-3 px-4">
+                                <button
+                                  onClick={() => handleAddStudent(pilot, selectedCourse.id)}
+                                  disabled={isLoading}
+                                  className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                                >
+                                  Add to Course
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -857,59 +933,73 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
                         </tr>
                       </thead>
                       <tbody>
-                        {students.filter(student => student.courseId === selectedCourse.id).map((student) => (
-                          <tr key={student.id} className="border-b border-gray-100">
-                            <td className="py-3 px-4 text-gray-900">{student.name}</td>
-                            <td className="py-3 px-4 text-gray-600">{student.jalId}</td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center">
-                                <div className="w-20 bg-gray-200 rounded-full h-2 mr-2">
-                                  <div 
-                                    className="bg-blue-600 h-2 rounded-full" 
-                                    style={{ width: `${student.progress}%` }}
-                                  ></div>
-                                </div>
-                                <span className="text-sm text-gray-600">{student.progress}%</span>
-                              </div>
-                            </td>
-                            <td className="py-3 px-4">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                student.status === 'enrolled' ? 'bg-blue-100 text-blue-800' :
-                                student.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {student.status}
-                              </span>
-                            </td>
-                            <td className="py-3 px-4 text-gray-600">
-                              {new Date(student.enrolledAt).toLocaleDateString()}
-                            </td>
-                            <td className="py-3 px-4">
-                              <div className="flex space-x-2">
-                                <button 
-                                  onClick={() => {
-                                    // TODO: Implement detailed progress view
-                                    alert(`Viewing detailed progress for ${student.name}`);
-                                  }}
-                                  className="text-blue-600 hover:text-blue-800 text-xs"
-                                >
-                                  View Progress
-                                </button>
-                                <button 
-                                  onClick={() => {
-                                    // TODO: Implement remove student
-                                    if (confirm(`Remove ${student.name} from ${selectedCourse.title}?`)) {
-                                      alert(`Removed ${student.name} from course`);
-                                    }
-                                  }}
-                                  className="text-red-600 hover:text-red-800 text-xs"
-                                >
-                                  Remove
-                                </button>
+                        {students.filter(student => student.courseId === selectedCourse.id).length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="py-8 text-center text-gray-500">
+                              <div className="flex flex-col items-center">
+                                <svg className="w-12 h-12 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                </svg>
+                                <p className="text-sm">No students enrolled yet</p>
+                                <p className="text-xs text-gray-400 mt-1">Enroll pilots from the available pilots table above</p>
                               </div>
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          students.filter(student => student.courseId === selectedCourse.id).map((student) => (
+                            <tr key={student.id} className="border-b border-gray-100">
+                              <td className="py-3 px-4 text-gray-900">{student.name}</td>
+                              <td className="py-3 px-4 text-gray-600">{student.jalId}</td>
+                              <td className="py-3 px-4">
+                                <div className="flex items-center">
+                                  <div className="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                                    <div 
+                                      className="bg-blue-600 h-2 rounded-full" 
+                                      style={{ width: `${student.progress}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-sm text-gray-600">{student.progress}%</span>
+                                </div>
+                              </td>
+                              <td className="py-3 px-4">
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  student.status === 'enrolled' ? 'bg-blue-100 text-blue-800' :
+                                  student.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {student.status}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-gray-600">
+                                {new Date(student.enrolledAt).toLocaleDateString()}
+                              </td>
+                              <td className="py-3 px-4">
+                                <div className="flex space-x-2">
+                                  <button 
+                                    onClick={() => {
+                                      // TODO: Implement detailed progress view
+                                      alert(`Viewing detailed progress for ${student.name}`);
+                                    }}
+                                    className="text-blue-600 hover:text-blue-800 text-xs"
+                                  >
+                                    View Progress
+                                  </button>
+                                  <button 
+                                    onClick={() => {
+                                      // TODO: Implement remove student
+                                      if (confirm(`Remove ${student.name} from ${selectedCourse.title}?`)) {
+                                        alert(`Removed ${student.name} from course`);
+                                      }
+                                    }}
+                                    className="text-red-600 hover:text-red-800 text-xs"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -1423,32 +1513,74 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  if (editingCourse) {
-                    // Update existing course
-                    setCourses(prev => prev.map(c => 
-                      c.id === editingCourse.id 
-                        ? { ...c, ...newCourse, sections: newCourse.sections }
-                        : c
-                    ));
-                  } else {
-                    // Create new course
-                    const course: Course = {
-                      id: Date.now().toString(),
-                      title: newCourse.title,
-                      description: newCourse.description,
-                      instructor: currentUser?.name || 'Current User',
-                      status: newCourse.status,
-                      students: 0,
-                      createdAt: new Date().toISOString(),
-                      sections: newCourse.sections
-                    };
-                    setCourses(prev => [course, ...prev]);
-                  }
-                  
-                  setShowCourseForm(false);
-                  setEditingCourse(null);
+                onClick={async () => {
+                  setIsLoading(true);
+                  try {
+                    if (editingCourse) {
+                      // Update existing course in database
+                      const response = await fetch(`/api/courses/${editingCourse.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          ...newCourse,
+                          sections: newCourse.sections
+                        }),
+                      });
+
+                      const result = await response.json();
+                      if (result.success) {
+                        // Update local state
+                        setCourses(prev => prev.map(c => 
+                          c.id === editingCourse.id 
+                            ? { ...c, ...newCourse, sections: newCourse.sections }
+                            : c
+                        ));
+                        alert('Course updated successfully!');
+                      } else {
+                        alert(result.error || 'Failed to update course');
+                      }
+                    } else {
+                      // Create new course in database
+                      const courseData = {
+                        title: newCourse.title,
+                        description: newCourse.description,
+                        instructor: currentUser?.name || 'Current User',
+                        status: newCourse.status,
+                        category: newCourse.category,
+                        sections: newCourse.sections
+                      };
+
+                      const response = await fetch('/api/courses', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(courseData),
+                      });
+
+                      const result = await response.json();
+                      if (result.success) {
+                        // Add to local state
+                        setCourses(prev => [result.course, ...prev]);
+                        alert('Course created successfully!');
+                      } else {
+                        alert(result.error || 'Failed to create course');
+                      }
+                    }
+                    
+                    setShowCourseForm(false);
+                    setEditingCourse(null);
                     setNewCourse({ title: '', description: '', status: 'draft', category: '', sections: [] });
+                  } catch (error) {
+                    logger.error('Error saving course', { 
+                      message: error instanceof Error ? error.message : String(error) 
+                    });
+                    alert('Error saving course. Please try again.');
+                  } finally {
+                    setIsLoading(false);
+                  }
                 }}
                 disabled={!newCourse.title || isLoading}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

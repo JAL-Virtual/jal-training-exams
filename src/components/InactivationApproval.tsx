@@ -41,45 +41,18 @@ export default function InactivationApproval({ onApprovalChange }: InactivationA
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        // For now, we'll simulate some pending requests
-        // In a real system, this would fetch from an API endpoint
-        const mockRequests: InactivationRequest[] = [
-          {
-            id: '1',
-            userId: 'trainer_123',
-            userType: 'trainer',
-            userName: 'John Smith',
-            userJalId: 'JAL001',
-            setInactive: true,
-            inactivationPeriod: {
-              from: '2024-01-15',
-              to: '2024-02-15',
-              days: '30',
-              comments: 'Vacation period - will be unavailable for training assignments'
-            },
-            requestedBy: 'john.smith@jal.com',
-            requestedAt: '2024-01-10T10:00:00Z',
-            status: 'pending'
-          },
-          {
-            id: '2',
-            userId: 'examiner_456',
-            userType: 'examiner',
-            userName: 'Jane Doe',
-            userJalId: 'JAL002',
-            setInactive: false,
-            inactivationPeriod: {
-              from: '',
-              to: '',
-              days: '',
-              comments: 'Ready to resume examination duties'
-            },
-            requestedBy: 'jane.doe@jal.com',
-            requestedAt: '2024-01-12T14:30:00Z',
-            status: 'pending'
+        // Fetch real inactivation requests from database
+        const response = await fetch('/api/inactivation-requests');
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setRequests(result.requests);
+          } else {
+            logger.error('Failed to fetch inactivation requests', { error: result.error });
           }
-        ];
-        setRequests(mockRequests);
+        } else {
+          logger.error('Error fetching inactivation requests', { status: response.status });
+        }
       } catch (error) {
         logger.error('Error loading inactivation requests', { 
           message: error instanceof Error ? error.message : String(error) 
