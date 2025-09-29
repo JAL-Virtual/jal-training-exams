@@ -284,6 +284,17 @@ export default function ManageStaff({ onTrainerChange }: ManageStaffProps) {
     }
   };
 
+  // Unused functions - commented out for ESLint cleanup
+  /*
+  const handleToggleTrainerStatus = async (id: string, currentStatus: boolean) => {
+    // Implementation here
+  };
+
+  const handleToggleExaminerStatus = async (id: string, currentStatus: boolean) => {
+    // Implementation here
+  };
+  */
+
   const roleOptions = [
     { value: 'Trainer', label: 'Trainer', description: 'Can manage training sessions' },
     { value: 'Examiner', label: 'Examiner', description: 'Can manage examinations' },

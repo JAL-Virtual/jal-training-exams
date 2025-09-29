@@ -9,6 +9,13 @@ import UserProfile from '@/components/UserProfile';
 import WelcomeSection from '@/components/WelcomeSection';
 import Sidebar from '@/components/Sidebar';
 import ManageStaff from '@/components/ManageStaff';
+import TrainingStaffManagement from '@/components/TrainingStaffManagement';
+import SetInactiveActive from '@/components/SetInactiveActive';
+import InactivationRequests from '@/components/InactivationRequests';
+import MyTrainingDashboard from '@/components/MyTrainingDashboard';
+import PendingTraining from '@/components/PendingTraining';
+import CompletedTraining from '@/components/CompletedTraining';
+import QuizActivity from '@/components/QuizActivity';
 import ApprovalTrainer from '@/components/ApprovalTrainer';
 import ApprovalExaminer from '@/components/ApprovalExaminer';
 import ComingSoon from '@/components/ComingSoon';
@@ -166,8 +173,14 @@ export default function DashboardPage() {
             if (activeSection === 'manage-staff') {
               return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'training-staff-management') {
-              return <ManageStaff onTrainerChange={refreshStaffCounts} />;
-            } else if (activeSection === 'examiner-staff-management') {
+              return <TrainingStaffManagement onTrainerChange={refreshStaffCounts} />;
+            } else if (activeSection === 'set-inactive-active') {
+              return <SetInactiveActive onTrainerChange={refreshStaffCounts} />;
+        } else if (activeSection === 'inactivation-requests') {
+          return <InactivationRequests onRequestProcessed={refreshStaffCounts} />;
+        } else if (activeSection === 'my-training') {
+          return <MyTrainingDashboard />;
+        } else if (activeSection === 'examiner-staff-management') {
               return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'approved-trainers') {
               return <ApprovalTrainer showAddForm={false} />;
@@ -187,44 +200,11 @@ export default function DashboardPage() {
                 />
               );
             } else if (activeSection === 'pending-training') {
-              return (
-                <ComingSoon 
-                  title="Pending Training" 
-                  description="Training sessions awaiting completion"
-                  color="yellow"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  }
-                />
-              );
+              return <PendingTraining />;
             } else if (activeSection === 'completed-training') {
-              return (
-                <ComingSoon 
-                  title="Completed Training" 
-                  description="View your completed training sessions"
-                  color="green"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  }
-                />
-              );
+              return <CompletedTraining />;
             } else if (activeSection === 'theoretical-check') {
-              return (
-                <ComingSoon 
-                  title="Theoretical Check" 
-                  description="Complete theoretical knowledge assessments"
-                  color="purple"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  }
-                />
-              );
+              return <QuizActivity />;
             } else if (activeSection === 'reports-analytics') {
               return (
                 <ComingSoon 
