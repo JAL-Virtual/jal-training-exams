@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
 export default function UserDataDebug() {
   const [debugInfo, setDebugInfo] = useState<{
@@ -21,7 +22,7 @@ export default function UserDataDebug() {
           return;
         }
 
-        console.log('Testing API with key:', apiKey.substring(0, 8) + '...');
+        logger.debug('Testing API with key', { keyPrefix: apiKey.substring(0, 8) + '...' });
 
         const response = await fetch('/api/auth/verify', {
           method: 'POST',
@@ -32,7 +33,7 @@ export default function UserDataDebug() {
         });
 
         const result = await response.json();
-        console.log('Full API Response:', result);
+        logger.debug('Full API Response received', { hasResult: !!result, hasUser: !!result?.user });
         
         setDebugInfo({
           status: response.status,
@@ -43,7 +44,9 @@ export default function UserDataDebug() {
         });
 
       } catch (error) {
-        console.error('API Test Error:', error);
+        logger.error('API Test Error', { 
+          message: error instanceof Error ? error.message : String(error) 
+        });
         setDebugInfo({ 
           error: error instanceof Error ? error.message : 'An unknown error occurred' 
         });

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { logger } from '@/lib/logger';
 
 // POST /api/auth/verify - Verify API key
 export async function POST(request: NextRequest) {
@@ -24,16 +25,15 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      console.log('JAL API Response Status:', jalApiResponse.status);
-      console.log('JAL API Response OK:', jalApiResponse.ok);
+      logger.debug('JAL API Response Status', { status: jalApiResponse.status, ok: jalApiResponse.ok });
 
       if (jalApiResponse.ok) {
         const jalApiData = await jalApiResponse.json();
-        console.log('JAL API Response:', jalApiData);
+        logger.debug('JAL API Response received', { hasData: !!jalApiData });
         
         // Extract user data from JAL API response (phpVMS format)
         const jalUserData = jalApiData.data;
-        console.log('Extracted User Data:', jalUserData);
+        logger.debug('Extracted User Data', { userId: jalUserData?.id, name: jalUserData?.name });
         
         // Check if user exists in our staff database for role information
         try {
@@ -54,14 +54,16 @@ export async function POST(request: NextRequest) {
             airline: jalUserData.airline || null
           };
           
-          console.log('Final User Object:', user);
+          logger.debug('Final User Object created', { userId: user.id, name: user.name, role: user.role });
 
           return NextResponse.json({
             ok: true,
             user: user
           });
         } catch (dbError) {
-          console.log('Database not available, using JAL API data only:', dbError);
+          logger.warn('Database not available, using JAL API data only', { 
+            error: dbError instanceof Error ? dbError.message : String(dbError) 
+          });
           // If database is not available, still return JAL API data
           const user = {
             id: jalUserData.id?.toString() || 'user_' + Date.now(),
@@ -76,7 +78,7 @@ export async function POST(request: NextRequest) {
             airline: jalUserData.airline || null
           };
           
-          console.log('Fallback User Object:', user);
+          logger.debug('Fallback User Object created', { userId: user.id, name: user.name });
 
           return NextResponse.json({
             ok: true,
@@ -107,11 +109,10 @@ export async function POST(request: NextRequest) {
         );
       }
     } catch (apiError) {
-      console.error('JAL API Error:', apiError);
-      console.error('API Error Details:', {
+      logger.error('JAL API Error', { 
         message: apiError instanceof Error ? apiError.message : 'Unknown error',
         stack: apiError instanceof Error ? apiError.stack : undefined,
-        apiKey: apiKey
+        apiKey: apiKey?.substring(0, 8) + '...'
       });
       
       // Fallback: Check if it's our admin key
@@ -138,7 +139,9 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Error verifying API key:', error);
+    logger.error('Error verifying API key', { 
+      message: error instanceof Error ? error.message : String(error) 
+    });
     return NextResponse.json(
       { ok: false, error: 'Failed to verify API key' },
       { status: 500 }

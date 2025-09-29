@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { logger } from '@/lib/logger';
 
 interface SidebarProps {
   activeSection: string;
@@ -33,7 +34,9 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           }
         }
       } catch (error) {
-        console.error('Error fetching admin key:', error);
+        logger.error('Error fetching admin key', { 
+          message: error instanceof Error ? error.message : String(error) 
+        });
       }
     };
 
@@ -57,11 +60,13 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           const result = await response.json();
           if (result.success) {
             setCurrentUserRole(result.role);
-            console.log('Current user role:', result.role);
+            logger.debug('Current user role', { role: result.role });
           }
         }
       } catch (error) {
-        console.error('Error fetching user role:', error);
+        logger.error('Error fetching user role', { 
+          message: error instanceof Error ? error.message : String(error) 
+        });
       }
     };
 

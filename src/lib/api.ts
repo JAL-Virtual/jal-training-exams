@@ -1,4 +1,5 @@
 import { AuthResponse, User, JALVirtualAPIResponse } from '@/types';
+import { logger } from './logger';
 
 export class APIClient {
   private baseUrl: string;
@@ -11,8 +12,7 @@ export class APIClient {
 
   async authenticate(): Promise<AuthResponse> {
     try {
-      console.log('APIClient: Attempting authentication with baseUrl:', this.baseUrl);
-      console.log('APIClient: API key (first 8 chars):', this.apiKey.substring(0, 8) + '...');
+      logger.debug('APIClient: Attempting authentication', { baseUrl: this.baseUrl, apiKeyPrefix: this.apiKey.substring(0, 8) + '...' });
       
       // Try X-API-Key authentication first
       const response = await fetch(`${this.baseUrl}/user`, {
@@ -25,11 +25,11 @@ export class APIClient {
         cache: 'no-store',
       });
 
-      console.log('APIClient: X-API-Key response status:', response.status);
+      logger.debug('APIClient: X-API-Key response', { status: response.status });
 
       if (response.ok) {
         const apiResponse: JALVirtualAPIResponse = await response.json();
-        console.log('APIClient: X-API-Key user data:', apiResponse);
+        logger.debug('APIClient: X-API-Key user data received', { userId: apiResponse.data?.id, name: apiResponse.data?.name });
         return {
           success: true,
           user: apiResponse.data
@@ -37,7 +37,7 @@ export class APIClient {
       }
 
       // Fallback to Bearer token
-      console.log('APIClient: Trying Bearer token fallback');
+      logger.debug('APIClient: Trying Bearer token fallback');
       const bearerResponse = await fetch(`${this.baseUrl}/user`, {
         method: 'GET',
         headers: {
@@ -48,11 +48,11 @@ export class APIClient {
         cache: 'no-store',
       });
 
-      console.log('APIClient: Bearer token response status:', bearerResponse.status);
+      logger.debug('APIClient: Bearer token response', { status: bearerResponse.status });
 
       if (bearerResponse.ok) {
         const apiResponse: JALVirtualAPIResponse = await bearerResponse.json();
-        console.log('APIClient: Bearer token user data:', apiResponse);
+        logger.debug('APIClient: Bearer token user data received', { userId: apiResponse.data?.id, name: apiResponse.data?.name });
         return {
           success: true,
           user: apiResponse.data

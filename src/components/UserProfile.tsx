@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { User } from '@/types';
+import { logger } from '@/lib/logger';
 
 interface UserProfileProps {
   onLogout: () => void;
@@ -31,29 +32,37 @@ export default function UserProfile({ onLogout }: UserProfileProps) {
 
         if (response.ok) {
           const result = await response.json();
-          console.log('API Response:', result);
-          console.log('Response keys:', Object.keys(result));
+          logger.debug('API Response received', { 
+            hasResult: !!result, 
+            keys: Object.keys(result || {}),
+            hasUser: !!result?.user 
+          });
           
           if (result.ok && result.user) {
-            console.log('Raw user data:', result.user);
-            console.log('User data keys:', Object.keys(result.user));
-            console.log('User data values:', Object.values(result.user));
+            logger.debug('User data processed', { 
+              userId: result.user.id, 
+              name: result.user.name,
+              role: result.user.role,
+              keysCount: Object.keys(result.user).length 
+            });
             
             // Use the actual JAL Virtual API response structure
-            console.log('Using JAL Virtual API user data:', result.user);
+            logger.info('Using JAL Virtual API user data', { userId: result.user.id, name: result.user.name });
             setUser(result.user);
             // Update stored user data
             localStorage.setItem('jal_user', JSON.stringify(result.user));
           } else {
-            console.log('No user data in response:', result);
+            logger.warn('No user data in response', { resultKeys: Object.keys(result || {}) });
           }
         } else {
-          console.log('API request failed:', response.status, response.statusText);
+          logger.error('API request failed', { status: response.status, statusText: response.statusText });
           const errorText = await response.text();
-          console.log('Error response:', errorText);
+          logger.error('Error response', { errorText: errorText.substring(0, 200) });
         }
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        logger.error('Failed to fetch user data', { 
+          message: error instanceof Error ? error.message : String(error) 
+        });
       } finally {
         setIsLoading(false);
       }
