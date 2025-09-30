@@ -22,7 +22,7 @@ import ApprovalTrainer from '../components/ApprovalTrainer';
 import ApprovalExaminer from '../components/ApprovalExaminer';
 import TrainingRequestForm from '../components/TrainingRequestForm';
 import TrainingTopicsManagement from '../components/TrainingTopicsManagement';
-import TrainingAssignments from '../components/TrainingAssignments';
+import MyAssignments from '../components/MyAssignments';
 import TrainingCalendar from '../components/TrainingCalendar';
 import FinishedTraining from '../components/FinishedTraining';
 import TrainerGuidelines from '../components/TrainerGuidelines';
@@ -282,7 +282,7 @@ export default function DashboardPage() {
       case 'manage-topics':
         return <TrainingTopicsManagement />;
       case 'my-assignments':
-        return <TrainingAssignments />;
+        return <MyAssignments />;
       case 'training-calendar':
         return <TrainingCalendar />;
       case 'finished-training':
