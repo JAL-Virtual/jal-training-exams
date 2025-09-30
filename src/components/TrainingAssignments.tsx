@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { Student } from '../types/common';
-
 import UserProfile from '../components/UserProfile';
 import WelcomeSection from '../components/WelcomeSection';
 import Sidebar from '../components/Sidebar';

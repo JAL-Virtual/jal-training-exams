@@ -29,6 +29,11 @@ import Instructions from '../../components/Instructions';
 import IssueTestToken from '../../components/IssueTestToken';
 import ComingSoon from '../../components/ComingSoon';
 import TheoreticalCheckout from '../../components/TheoreticalCheckout';
+import RecentActivityWidget from '../../components/RecentActivityWidget';
+import QuickActionsWidget from '../../components/QuickActionsWidget';
+import TrainingProgressChart from '../../components/TrainingProgressChart';
+import UpcomingEventsWidget from '../../components/UpcomingEventsWidget';
+import PerformanceMetricsWidget from '../../components/PerformanceMetricsWidget';
 
 // Removed unused interface DashboardData
 
@@ -386,7 +391,7 @@ export default function DashboardPage() {
                   <WelcomeSection />
 
                   {/* Summary Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <motion.div 
                       className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white"
                       whileHover={{ scale: 1.02 }}
@@ -413,6 +418,34 @@ export default function DashboardPage() {
                       <h3 className="text-sm font-medium opacity-90 mb-2">Total Available Trainers/Examiners</h3>
                       <p className="text-3xl font-bold">{stats.totalTrainers}/{stats.totalExaminers}</p>
                     </motion.div>
+                  </div>
+
+                  {/* Dashboard Widgets Grid */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {/* Quick Actions - Full width on large screens */}
+                    <div className="lg:col-span-2 xl:col-span-1">
+                      <QuickActionsWidget onActionClick={setActiveSection} />
+                    </div>
+
+                    {/* Recent Activity */}
+                    <div className="lg:col-span-2 xl:col-span-1">
+                      <RecentActivityWidget />
+                    </div>
+
+                    {/* Performance Metrics */}
+                    <div className="lg:col-span-2 xl:col-span-1">
+                      <PerformanceMetricsWidget />
+                    </div>
+
+                    {/* Training Progress Chart - Spans 2 columns on large screens */}
+                    <div className="lg:col-span-2">
+                      <TrainingProgressChart />
+                    </div>
+
+                    {/* Upcoming Events */}
+                    <div className="lg:col-span-2 xl:col-span-1">
+                      <UpcomingEventsWidget />
+                    </div>
                   </div>
                 </>
               );
