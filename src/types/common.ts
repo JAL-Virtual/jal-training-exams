@@ -70,7 +70,7 @@ export interface Quiz {
 
 export interface Assignment {
   trainerName: string;
-  rating(rating: any): unknown;
+  rating(rating: number): unknown;
   topicName: ReactNode;
   pilotId: ReactNode;
   pilotName: ReactNode;

@@ -20,7 +20,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     control: true,
     management: true
   });
-  const [expandedTrainingSubs, setExpandedTrainingSubs] = React.useState(false);
+  // const [expandedTrainingSubs] = React.useState(false);
   
   // Get admin API key from server
   React.useEffect(() => {
@@ -84,9 +84,9 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     }));
   };
 
-  const toggleTrainingSubs = () => {
-    setExpandedTrainingSubs(prev => !prev);
-  };
+  // const toggleTrainingSubs = () => {
+  //   // Function kept for potential future use
+  // };
 
   return (
     <div className="w-72 bg-white shadow-lg border-r border-gray-200">

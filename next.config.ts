@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   },
   distDir: ".next",
   output: "standalone",
+  outputFileTracingRoot: path.join(__dirname), 
   experimental: {
     serverActions: {},
   },

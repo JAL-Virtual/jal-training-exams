@@ -92,7 +92,7 @@ export default function TrainingRequestForm() {
         }),
       });
 
-      const json = await resp.json().catch(() => ({} as any));
+      const json = await resp.json().catch(() => ({} as Record<string, unknown>));
 
       if (resp.ok && json?.success !== false) {
         setFormData({ type: '', comments: '', studentId: '' });

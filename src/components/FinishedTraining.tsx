@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { User } from '../types/common';
+// import { User } from '../types/common';
 
 interface FinishedTraining {
   id: string;
@@ -26,7 +26,7 @@ interface FinishedTraining {
 export default function FinishedTraining() {
   const [trainings, setTrainings] = useState<FinishedTraining[]>([]);
   const [loading, setLoading] = useState(true);
-  const [_user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function FinishedTraining() {
       const storedUser = localStorage.getItem('jal_user');
       if (storedUser) {
         try {
-          setUser(JSON.parse(storedUser));
+        // setUser(JSON.parse(storedUser));
         } catch (error) {
           console.error('Error parsing user data:', error);
         }

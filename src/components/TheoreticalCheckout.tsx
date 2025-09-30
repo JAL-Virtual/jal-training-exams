@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { logger } from '../lib/logger';
-import { Course } from '../types/common';
+// import { Course } from '../types/common';
 
 interface TestToken {
   id: string;
@@ -17,21 +17,21 @@ interface TestToken {
   usedAt?: string;
 }
 
-interface Quiz {
-  id: string;
-  title: string;
-  questions: string[];
-}
+// interface Quiz {
+//   id: string;
+//   title: string;
+//   questions: string[];
+// }
 
 const TheoreticalCheckout: React.FC = () => {
   const [testTokens, setTestTokens] = useState<TestToken[]>([]);
-  const [_courses, setCourses] = useState<Course[]>([]);
+  // const [courses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [enteredToken, setEnteredToken] = useState('');
   const [selectedToken, setSelectedToken] = useState<TestToken | null>(null);
   const [showTokenForm, setShowTokenForm] = useState(false);
   const [currentUser, setCurrentUser] = useState<{name: string, role: string} | null>(null);
-  const [_quiz, _setQuiz] = useState<Quiz | null>(null);
+  // const [quiz, setQuiz] = useState<Quiz | null>(null);
 
   useEffect(() => {
     fetchCurrentUser();
@@ -73,7 +73,7 @@ const TheoreticalCheckout: React.FC = () => {
       }
 
       if (coursesResult.success) {
-        setCourses(coursesResult.courses);
+        // setCourses(coursesResult.courses);
       }
     } catch (error) {
       logger.error('Error loading data for Theoretical Checkout', {

@@ -66,8 +66,8 @@ const MyTrainingDashboard: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchQuery] = useState('');
+  const [selectedCategory] = useState('');
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 

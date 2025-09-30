@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import type { User } from '../types/common'; // type-only import
+// import type { User } from '../types/common';
 
 interface TrainingDetail {
   id: string;
@@ -30,7 +30,7 @@ interface TrainingDetailPageProps {
 export default function TrainingDetailPage({ trainingId }: TrainingDetailPageProps) {
   const [training, setTraining] = useState<TrainingDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [_user, _setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const fetchTrainingDetail = useCallback(async () => {

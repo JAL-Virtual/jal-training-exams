@@ -31,12 +31,7 @@ import IssueTestToken from '../../components/IssueTestToken';
 import ComingSoon from '../../components/ComingSoon';
 import TheoreticalCheckout from '../../components/TheoreticalCheckout';
 
-interface DashboardData {
-  json(): unknown;
-  ok: any;
-  status: string;
-  data: unknown;
-}
+// Removed unused interface DashboardData
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -139,7 +134,7 @@ export default function DashboardPage() {
         if (studentsData.success) {
           const students = studentsData.students;
           const totalRequested = students.length;
-          const totalCompleted = students.filter((student: any) => student.status === 'completed').length;
+          const totalCompleted = students.filter((student: Student) => student.status === 'completed').length;
           
           setStats(prev => ({
             ...prev,
