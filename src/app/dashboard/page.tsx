@@ -17,18 +17,20 @@ import PendingTraining from '../../components/PendingTraining';
 import CompletedTraining from '../../components/CompletedTraining';
 import QuizActivity from '../../components/QuizActivity';
 import ApprovalTrainer from '../../components/ApprovalTrainer';
-import ApprovalExaminer from '../../components/ApprovalExaminer';
 import TrainingRequestForm from '../../components/TrainingRequestForm';
 import TrainingTopicsManagement from '../../components/TrainingTopicsManagement';
 import MyAssignments from '../../components/MyAssignments';
 import TrainingCalendar from '../../components/TrainingCalendar';
 import FinishedTraining from '../../components/FinishedTraining';
 import TrainerGuidelines from '../../components/TrainerGuidelines';
+import ExaminerGuidelines from '../../components/ExaminerGuidelines';
 import EmergencyHandbook from '../../components/EmergencyHandbook';
 import Instructions from '../../components/Instructions';
-import IssueTestToken from '../../components/IssueTestToken';
 import ComingSoon from '../../components/ComingSoon';
-import TheoreticalCheckout from '../../components/TheoreticalCheckout';
+import ExamRequestForm from '../../components/ExamRequestForm';
+import ExaminerAutoAssignment from '../../components/ExaminerAutoAssignment';
+import ExaminerCalendar from '../../components/ExaminerCalendar';
+import FinishedExam from '../../components/FinishedExam';
 
 // Removed unused interface DashboardData
 
@@ -225,18 +227,12 @@ export default function DashboardPage() {
               return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'training-staff-management') {
               return <TrainingStaffManagement onTrainerChange={refreshStaffCounts} />;
-            } else if (activeSection === 'issue-test-token') {
-              return <IssueTestToken />;
         } else if (activeSection === 'inactivation-requests') {
           return <InactivationRequests onRequestProcessed={refreshStaffCounts} />;
         } else if (activeSection === 'my-training') {
           return <MyTrainingDashboard />;
-        } else if (activeSection === 'examiner-staff-management') {
-              return <ManageStaff onTrainerChange={refreshStaffCounts} />;
-            } else if (activeSection === 'approved-trainers') {
+        } else if (activeSection === 'approved-trainers') {
               return <ApprovalTrainer showAddForm={false} />;
-            } else if (activeSection === 'approved-examiners') {
-              return <ApprovalExaminer showAddForm={false} />;
             } else if (activeSection === 'my-training') {
               return (
                 <ComingSoon 
@@ -283,101 +279,33 @@ export default function DashboardPage() {
                 />
               );
             } else if (activeSection === 'request-exam') {
-              return (
-                <ComingSoon 
-                  title="Request Exam" 
-                  description="Request examination sessions"
-                  color="purple"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  }
-                />
-              );
-            } else if (activeSection === 'theoretical-checkout') {
-              return <TheoreticalCheckout />;
+              return <ExamRequestForm />;
             } else if (activeSection === 'training-request') {
               return <TrainingRequestForm />;
             } else if (activeSection === 'manage-topics') {
               return <TrainingTopicsManagement />;
             } else if (activeSection === 'my-assignments') {
-              return <MyAssignments />;
+              return <MyAssignments isExaminerMode={false} />;
+            } else if (activeSection === 'examiner-assignments') {
+              return <MyAssignments isExaminerMode={true} />;
             } else if (activeSection === 'training-calendar') {
               return <TrainingCalendar />;
             } else if (activeSection === 'finished-training') {
               return <FinishedTraining />;
             } else if (activeSection === 'trainer-guidelines') {
               return <TrainerGuidelines />;
+            } else if (activeSection === 'examiner-guidelines') {
+              return <ExaminerGuidelines />;
+            } else if (activeSection === 'examiner-calendar') {
+              return <ExaminerCalendar />;
+            } else if (activeSection === 'finished-exam') {
+              return <FinishedExam />;
             } else if (activeSection === 'emergency-handbook') {
               return <EmergencyHandbook />;
             } else if (activeSection === 'instructions') {
               return <Instructions />;
-            } else if (activeSection === 'local-procedures') {
-              return (
-                <ComingSoon 
-                  title="Local Procedures" 
-                  description="Access local airport procedures and guidelines"
-                  color="green"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  }
-                />
-              );
-            } else if (activeSection === 'charts') {
-              return (
-                <ComingSoon 
-                  title="Charts" 
-                  description="Access aviation charts and navigation aids"
-                  color="blue"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                    </svg>
-                  }
-                />
-              );
-            } else if (activeSection === 'training-control') {
-              return (
-                <ComingSoon 
-                  title="Training Control" 
-                  description="Control and manage training operations"
-                  color="blue"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  }
-                />
-              );
-            } else if (activeSection === 'pickup-training') {
-              return (
-                <ComingSoon 
-                  title="Pickup Training" 
-                  description="Schedule and manage pickup training sessions"
-                  color="green"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  }
-                />
-              );
-            } else if (activeSection === 'examination') {
-              return (
-                <ComingSoon 
-                  title="Examination Control" 
-                  description="Control and manage examination operations"
-                  color="purple"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  }
-                />
-              );
+            } else if (activeSection === 'examiner-auto-assignment') {
+              return <ExaminerAutoAssignment />;
             } else {
               // Default dashboard content
               return (

@@ -27,7 +27,11 @@ interface Trainer {
   maxAssignments: number;
 }
 
-export default function MyAssignments() {
+interface MyAssignmentsProps {
+  isExaminerMode?: boolean;
+}
+
+export default function MyAssignments({ isExaminerMode = false }: MyAssignmentsProps) {
   const [assignments, setAssignments] = useState<TrainingAssignment[]>([]);
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -241,8 +245,15 @@ export default function MyAssignments() {
         <div className="mb-6">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-bold text-white dark:text-white mb-2">Training Assignments by JAL {currentUser?.id || 'User'}</h2>
-              <p className="text-white dark:text-white">Manage training assignments and auto-assignment system for {currentUser?.name || 'Current User'}</p>
+              <h2 className="text-2xl font-bold text-white dark:text-white mb-2">
+                {isExaminerMode ? 'Examiner Assignment by JAL' : 'Training Assignments by JAL'} {currentUser?.id || 'User'}
+              </h2>
+              <p className="text-white dark:text-white">
+                {isExaminerMode 
+                  ? `Manage examiner assignments and auto-assignment system for ${currentUser?.name || 'Current User'}`
+                  : `Manage training assignments and auto-assignment system for ${currentUser?.name || 'Current User'}`
+                }
+              </p>
             </div>
             <div className="flex space-x-2">
               <button

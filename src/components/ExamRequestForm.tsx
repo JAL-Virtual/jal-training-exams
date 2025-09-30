@@ -3,15 +3,7 @@
 import React, { useState, useEffect, type FormEvent } from 'react';
 import { motion } from 'framer-motion';
 
-interface TrainingTopic {
-  id: string;
-  name: string;
-  description: string;
-  active: boolean;
-}
-
 interface FormData {
-  type: string;       // topicId
   comments: string;
   studentId: string;
   requestedDate: string;
@@ -23,12 +15,9 @@ interface StoredUser {
   name: string;
 }
 
-export default function TrainingRequestForm() {
-  const [topics, setTopics] = useState<TrainingTopic[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ExamRequestForm() {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({ 
-    type: '', 
     comments: '', 
     studentId: '', 
     requestedDate: '', 
@@ -37,25 +26,8 @@ export default function TrainingRequestForm() {
   const [user, setUser] = useState<StoredUser | null>(null);
 
   useEffect(() => {
-    fetchTopics();
     fetchUserData();
   }, []);
-
-  const fetchTopics = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/training-topics');
-      if (!response.ok) throw new Error('Failed to fetch topics');
-      const json = await response.json();
-      if (json?.success && Array.isArray(json.topics)) {
-        setTopics(json.topics.filter((t: TrainingTopic) => t.active));
-      }
-    } catch (error) {
-      console.error('Error fetching topics:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchUserData = () => {
     if (typeof window === 'undefined') return;
@@ -72,7 +44,7 @@ export default function TrainingRequestForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.type || !formData.studentId || !formData.requestedDate || !formData.requestedTime) {
+    if (!formData.studentId || !formData.requestedDate || !formData.requestedTime) {
       alert('Please fill in all required fields');
       return;
     }
@@ -83,16 +55,12 @@ export default function TrainingRequestForm() {
 
     setSubmitting(true);
     try {
-      const selectedTopic = topics.find(t => t.id === formData.type);
-
-      const resp = await fetch('/api/training-requests', {
+      const resp = await fetch('/api/test-submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           pilotId: user.id,
           pilotName: user.name,
-          topicId: formData.type,
-          topicName: selectedTopic?.name ?? '',
           requestedDate: formData.requestedDate,
           requestedTime: formData.requestedTime,
           comments: formData.comments,
@@ -103,26 +71,18 @@ export default function TrainingRequestForm() {
       const json = await resp.json().catch(() => ({} as Record<string, unknown>));
 
       if (resp.ok && json?.success !== false) {
-        setFormData({ type: '', comments: '', studentId: '', requestedDate: '', requestedTime: '' });
-        alert('Training request submitted successfully');
+        setFormData({ comments: '', studentId: '', requestedDate: '', requestedTime: '' });
+        alert('Exam request submitted successfully');
       } else {
-        alert(json?.error || 'Failed to submit training request');
+        alert(json?.error || 'Failed to submit exam request');
       }
     } catch (error) {
-      console.error('Error submitting training request:', error);
+      console.error('Error submitting exam request:', error);
       alert('An error occurred while submitting the request');
     } finally {
       setSubmitting(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -133,37 +93,11 @@ export default function TrainingRequestForm() {
         className="bg-white rounded-lg shadow-lg p-6"
       >
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Training</h2>
-          <p className="text-gray-600">Submit a training request for Japan Airlines Virtuals</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Exam</h2>
+          <p className="text-gray-600">Submit an exam request for Japan Airlines Virtuals</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Topic Selection */}
-          <div>
-            <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
-              Training Topic *
-            </label>
-            <select
-              id="topic"
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
-              required
-            >
-              <option value="">Select a training topic</option>
-              {topics.map((topic) => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.name}
-                </option>
-              ))}
-            </select>
-            {formData.type && (
-              <p className="mt-1 text-sm text-gray-500">
-                {topics.find(t => t.id === formData.type)?.description}
-              </p>
-            )}
-          </div>
-
           {/* Date and Time Selection */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

@@ -4,12 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function Instructions() {
-  const handleOpenPDF = (filename: string) => {
-    // In a real application, this would open the actual PDF file
-    // For now, we'll show an alert
-    alert(`Opening ${filename} - This would open the PDF in a new tab`);
-  };
-
   return (
     <div className="max-w-4xl mx-auto p-6">
       <motion.div
@@ -27,30 +21,6 @@ export default function Instructions() {
         {/* Content */}
         <div className="p-6">
           <div className="space-y-6">
-            {/* Main Instructions Card */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-blue-50 border border-blue-200 rounded-lg p-6 cursor-pointer"
-              onClick={() => handleOpenPDF('exam-system-instructions.pdf')}
-            >
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-blue-900">Complete System Instructions</h3>
-                  <p className="text-blue-700">Click to open the full examination system instructions PDF</p>
-                </div>
-                <div className="ml-auto">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-              </div>
-            </motion.div>
-
             {/* System Overview */}
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">System Overview</h3>
