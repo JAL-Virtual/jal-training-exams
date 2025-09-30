@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react-hooks"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",           // allow any for now
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "ignoreRestSiblings": true
+    }],
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "off"
+  }
+}

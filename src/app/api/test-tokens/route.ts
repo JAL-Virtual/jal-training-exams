@@ -11,7 +11,7 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
-      tokens: tokens
+      testTokens: tokens
     });
   } catch (error) {
     logger.error('Error fetching test tokens', {

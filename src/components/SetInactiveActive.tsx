@@ -236,7 +236,7 @@ export default function SetInactiveActive({ onTrainerChange }: SetInactiveActive
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50"
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}

@@ -127,17 +127,50 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
               Main Dashboard
             </button>
             
+            <button 
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                activeSection === 'training-request' 
+                  ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => onSectionChange('training-request')}
+            >
+              <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Request Training
+            </button>
           </div>
         </div>
 
-        {/* TRAINING DEPARTMENT */}
+        {/* GENERAL INSTRUCTIONS */}
+        <div className="mb-6">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">GENERAL INSTRUCTIONS</h3>
+          <div className="space-y-1">
+            <button 
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                activeSection === 'instructions' 
+                  ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => onSectionChange('instructions')}
+            >
+              <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Instructions of the Exam System
+            </button>
+          </div>
+        </div>
+
+        {/* TRAINING ADMINISTRATION */}
         {canAccessTraining && (
           <div className="mb-6">
             <button
               onClick={() => toggleSection('training')}
               className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
             >
-              <span className="flex-1 text-left">TRAINING DEPARTMENT</span>
+              <span className="flex-1 text-left">TRAINING ADMINISTRATION</span>
               <svg 
                 className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ml-2 ${expandedSections.training ? 'rotate-180 text-blue-500' : 'text-gray-400'}`} 
                 fill="none" 
@@ -150,85 +183,73 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.training ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center justify-between"
-                  onClick={toggleTrainingSubs}
-                >
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    Training
-                  </div>
-                  <svg 
-                    className={`w-4 h-4 transition-all duration-300 flex-shrink-0 ${expandedTrainingSubs ? 'rotate-180 text-blue-500' : 'text-gray-400'}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {/* Training Sub-buttons */}
-                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedTrainingSubs ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="ml-6 space-y-1">
-                  <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                    onClick={() => onSectionChange('my-training')}
-                  >
-                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    My Training
-                  </button>
-                  <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                    onClick={() => onSectionChange('pending-training')}
-                  >
-                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Pending Training
-                  </button>
-                  <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                    onClick={() => onSectionChange('completed-training')}
-                  >
-                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Completed Training
-                  </button>
-                  <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                    onClick={() => onSectionChange('theoretical-check')}
-                  >
-                    <svg className="w-3 h-3 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Theoretical Check
-                  </button>
-                  </div>
-                </div>
-                <button 
                   className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                  onClick={() => onSectionChange('approved-trainers')}
+                  onClick={() => onSectionChange('my-assignments')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  Approved Trainers
+                  My Assignments
                 </button>
                 <button 
                   className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
-                  onClick={() => onSectionChange('upcoming-training')}
+                  onClick={() => onSectionChange('trainer-guidelines')}
+                >
+                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Guideline for Trainers
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  onClick={() => onSectionChange('emergency-handbook')}
+                >
+                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  <span className="text-red-600 font-bold">New! Emergency Handbook</span>
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  onClick={() => onSectionChange('training-calendar')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  Upcoming Training
+                  Training Calendar
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  onClick={() => onSectionChange('finished-training')}
+                >
+                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Finished Training
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* T-STAFF TOOLS */}
+        {canAccessTraining && (
+          <div className="mb-6">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">T-STAFF TOOLS</h3>
+            <div className="space-y-1">
+              <button 
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                  activeSection === 'set-inactive-active' 
+                    ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={() => onSectionChange('set-inactive-active')}
+              >
+                <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                </svg>
+                Set Inactive / Set Active
+              </button>
             </div>
           </div>
         )}
@@ -379,6 +400,15 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   </svg>
                   Set Inactive / Set Active
                 </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  onClick={() => onSectionChange('issue-test-token')}
+                >
+                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                  </svg>
+                  Issue Test Token
+                </button>
               </div>
             </div>
           </div>
@@ -454,6 +484,15 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                   </svg>
                   Manage Staff
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  onClick={() => onSectionChange('manage-topics')}
+                >
+                  <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                  Manage Topics
                 </button>
                 <button 
                   className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"

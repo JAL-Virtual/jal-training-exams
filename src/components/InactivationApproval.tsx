@@ -144,7 +144,7 @@ export default function InactivationApproval({ onApprovalChange }: InactivationA
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={() => setShowReviewModal(false)}
     >
       <motion.div

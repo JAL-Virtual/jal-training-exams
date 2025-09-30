@@ -1,6 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { logger } from '@/lib/logger';
+import { logger } from '../lib/logger';
 
 interface Course {
   id: string;
@@ -158,6 +160,7 @@ const CompletedTraining: React.FC = () => {
     }
   });
 
+  // Loading state JSX
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -168,7 +171,7 @@ const CompletedTraining: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header section */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg">
         <div className="flex items-center">
           <svg className="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,57 +182,34 @@ const CompletedTraining: React.FC = () => {
             <p className="text-gray-600">View your completed training sessions and certificates</p>
           </div>
         </div>
-      </div>
-
-      {/* Filters and Sort */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Search completed courses..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="w-48">
-            <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              <option value="pilot">Pilot Training</option>
-              <option value="atc">ATC Training</option>
-              <option value="ground">Ground School</option>
-              <option value="safety">Safety & Emergency</option>
-              <option value="technical">Technical Systems</option>
-              <option value="procedures">Standard Procedures</option>
-              <option value="communication">Communication</option>
-              <option value="navigation">Navigation</option>
-              <option value="meteorology">Meteorology</option>
-              <option value="aircraft">Aircraft Systems</option>
-              <option value="regulations">Aviation Regulations</option>
-              <option value="human-factors">Human Factors</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="dispatch">Dispatch Operations</option>
-              <option value="cargo">Cargo Operations</option>
-              <option value="passenger">Passenger Services</option>
-              <option value="management">Aviation Management</option>
-            </select>
-          </div>
-          <div className="w-32">
-            <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'date' | 'name' | 'category')}
-            >
-              <option value="date">Sort by Date</option>
-              <option value="name">Sort by Name</option>
-              <option value="category">Sort by Category</option>
-            </select>
-          </div>
+        {/* Search and Filter Controls */}
+        <div className="mt-4 flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search completed courses..."
+            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200 w-full md:w-1/3"
+          />
+          <select
+            value={selectedCategory}
+            onChange={e => setSelectedCategory(e.target.value)}
+            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200 w-full md:w-1/4"
+          >
+            <option value="">All Categories</option>
+            {[...new Set(courses.map(c => c.category).filter(Boolean))].map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value as 'date' | 'name' | 'category')}
+            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-200 w-full md:w-1/4"
+          >
+            <option value="date">Sort by Date</option>
+            <option value="name">Sort by Name</option>
+            <option value="category">Sort by Category</option>
+          </select>
         </div>
       </div>
 
@@ -322,7 +302,7 @@ const CompletedTraining: React.FC = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-green-50 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-green-600 mb-1">
             {completedEnrollments.length}
@@ -340,21 +320,14 @@ const CompletedTraining: React.FC = () => {
         </div>
         <div className="bg-purple-50 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-purple-600 mb-1">
-            {completedEnrollments.length > 0 ? Math.round(completedEnrollments.reduce((acc, e) => {
-              const course = courses.find(c => c.id === e.courseId);
-              return acc + (course?.sections?.length || 0);
-            }, 0) / completedEnrollments.length) : 0}
+            {completedEnrollments.length > 0 
+              ? Math.round(completedEnrollments.reduce((acc, e) => {
+                  const course = courses.find(c => c.id === e.courseId);
+                  return acc + (course?.sections?.length || 0);
+                }, 0) / completedEnrollments.length) 
+              : 0}
           </div>
           <div className="text-sm text-purple-800">Avg Sections</div>
-        </div>
-        <div className="bg-yellow-50 p-4 rounded-lg text-center">
-          <div className="text-2xl font-bold text-yellow-600 mb-1">
-            {completedEnrollments.filter(e => {
-              const course = courses.find(c => c.id === e.courseId);
-              return course?.category === 'pilot';
-            }).length}
-          </div>
-          <div className="text-sm text-yellow-800">Pilot Training</div>
         </div>
       </div>
     </div>

@@ -422,7 +422,7 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={() => setShowForm(false)}
     >
       <motion.div
@@ -1384,23 +1384,6 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                         >
                           <option value="">Select Category</option>
-                          <option value="pilot">Pilot Training</option>
-                          <option value="atc">ATC Training</option>
-                          <option value="ground">Ground School</option>
-                          <option value="safety">Safety & Emergency</option>
-                          <option value="technical">Technical Systems</option>
-                          <option value="procedures">Standard Procedures</option>
-                          <option value="communication">Communication</option>
-                          <option value="navigation">Navigation</option>
-                          <option value="meteorology">Meteorology</option>
-                          <option value="aircraft">Aircraft Systems</option>
-                          <option value="regulations">Aviation Regulations</option>
-                          <option value="human-factors">Human Factors</option>
-                          <option value="maintenance">Maintenance</option>
-                          <option value="dispatch">Dispatch Operations</option>
-                          <option value="cargo">Cargo Operations</option>
-                          <option value="passenger">Passenger Services</option>
-                          <option value="management">Aviation Management</option>
                         </select>
                       </div>
               </div>

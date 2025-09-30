@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "type-check": "tsc --noEmit",
+    "vercel-build": "next build",
+    "vercel-deploy": "vercel --prod"
   },
   "dependencies": {
     "framer-motion": "^12.23.22",
@@ -26,5 +30,8 @@
     "eslint-config-next": "15.5.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.x"
   }
 }

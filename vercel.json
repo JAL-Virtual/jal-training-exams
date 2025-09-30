@@ -1,0 +1,38 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JAL_API_BASE_URL": "@jal_api_base_url",
+    "ADMIN_API_KEY": "@admin_api_key"
+  },
+  "regions": ["iad1"],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "vercel": {
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/next"
+      }
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "github": {
+      "enabled": true,
+      "silent": true
+    }
+  }
+}

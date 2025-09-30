@@ -161,46 +161,6 @@ const PendingTraining: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Search pending courses..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="w-48">
-            <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              <option value="pilot">Pilot Training</option>
-              <option value="atc">ATC Training</option>
-              <option value="ground">Ground School</option>
-              <option value="safety">Safety & Emergency</option>
-              <option value="technical">Technical Systems</option>
-              <option value="procedures">Standard Procedures</option>
-              <option value="communication">Communication</option>
-              <option value="navigation">Navigation</option>
-              <option value="meteorology">Meteorology</option>
-              <option value="aircraft">Aircraft Systems</option>
-              <option value="regulations">Aviation Regulations</option>
-              <option value="human-factors">Human Factors</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="dispatch">Dispatch Operations</option>
-              <option value="cargo">Cargo Operations</option>
-              <option value="passenger">Passenger Services</option>
-              <option value="management">Aviation Management</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
       {/* Pending Courses List */}
       <div className="space-y-4">

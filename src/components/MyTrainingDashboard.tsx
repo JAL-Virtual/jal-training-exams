@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { logger } from '@/lib/logger';
+import { logger } from '../lib/logger';
 
 interface Course {
   id: string;
@@ -130,7 +130,7 @@ const MyTrainingDashboard: React.FC = () => {
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           course.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === '' || course.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -163,39 +163,6 @@ const MyTrainingDashboard: React.FC = () => {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h4 className="text-md font-medium text-gray-900">Available Courses</h4>
-          <div className="flex items-center space-x-3">
-            <select
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              <option value="pilot">Pilot Training</option>
-              <option value="atc">ATC Training</option>
-              <option value="ground">Ground School</option>
-              <option value="safety">Safety & Emergency</option>
-              <option value="technical">Technical Systems</option>
-              <option value="procedures">Standard Procedures</option>
-              <option value="communication">Communication</option>
-              <option value="navigation">Navigation</option>
-              <option value="meteorology">Meteorology</option>
-              <option value="aircraft">Aircraft Systems</option>
-              <option value="regulations">Aviation Regulations</option>
-              <option value="human-factors">Human Factors</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="dispatch">Dispatch Operations</option>
-              <option value="cargo">Cargo Operations</option>
-              <option value="passenger">Passenger Services</option>
-              <option value="management">Aviation Management</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Search courses..."
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -4,31 +4,47 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { TrainingStats } from '@/types';
-import UserProfile from '@/components/UserProfile';
-import WelcomeSection from '@/components/WelcomeSection';
-import Sidebar from '@/components/Sidebar';
-import ManageStaff from '@/components/ManageStaff';
-import TrainingStaffManagement from '@/components/TrainingStaffManagement';
-import SetInactiveActive from '@/components/SetInactiveActive';
-import InactivationRequests from '@/components/InactivationRequests';
-import MyTrainingDashboard from '@/components/MyTrainingDashboard';
-import PendingTraining from '@/components/PendingTraining';
-import CompletedTraining from '@/components/CompletedTraining';
-import QuizActivity from '@/components/QuizActivity';
-import ApprovalTrainer from '@/components/ApprovalTrainer';
-import ApprovalExaminer from '@/components/ApprovalExaminer';
-import ComingSoon from '@/components/ComingSoon';
+import { TrainingStats } from '../../types';
+import { Student } from '../../types/common';
+import UserProfile from '../../components/UserProfile';
+import WelcomeSection from '../../components/WelcomeSection';
+import Sidebar from '../../components/Sidebar';
+import ManageStaff from '../../components/ManageStaff';
+import TrainingStaffManagement from '../../components/TrainingStaffManagement';
+import SetInactiveActive from '../../components/SetInactiveActive';
+import InactivationRequests from '../../components/InactivationRequests';
+import MyTrainingDashboard from '../../components/MyTrainingDashboard';
+import PendingTraining from '../../components/PendingTraining';
+import CompletedTraining from '../../components/CompletedTraining';
+import QuizActivity from '../../components/QuizActivity';
+import ApprovalTrainer from '../../components/ApprovalTrainer';
+import ApprovalExaminer from '../../components/ApprovalExaminer';
+import TrainingRequestForm from '../../components/TrainingRequestForm';
+import TrainingTopicsManagement from '../../components/TrainingTopicsManagement';
+import TrainingAssignments from '../../components/TrainingAssignments';
+import TrainingCalendar from '../../components/TrainingCalendar';
+import FinishedTraining from '../../components/FinishedTraining';
+import TrainerGuidelines from '../../components/TrainerGuidelines';
+import EmergencyHandbook from '../../components/EmergencyHandbook';
+import Instructions from '../../components/Instructions';
+import IssueTestToken from '../../components/IssueTestToken';
+import ComingSoon from '../../components/ComingSoon';
+import TheoreticalCheckout from '../../components/TheoreticalCheckout';
 
-
+interface DashboardData {
+  json(): unknown;
+  ok: any;
+  status: string;
+  data: unknown;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [stats, setStats] = useState<TrainingStats>({
-    totalTrainingRequested: 15,
-    totalTrainingCompleted: 89,
+    totalTrainingRequested: 0,
+    totalTrainingCompleted: 0,
     totalTrainers: 0,
     totalExaminers: 0
   });
@@ -42,6 +58,29 @@ export default function DashboardPage() {
       return;
     }
     
+    // Fetch training statistics
+    const fetchTrainingStats = async () => {
+      try {
+        const response = await fetch('/api/students');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const students = data.students;
+            const totalRequested = students.length; // All student enrollments
+            const totalCompleted = students.filter((student: Student) => student.status === 'completed').length;
+            
+            setStats(prev => ({
+              ...prev,
+              totalTrainingRequested: totalRequested,
+              totalTrainingCompleted: totalCompleted
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching training stats:', error);
+      }
+    };
+
     // Fetch trainer count
     const fetchTrainerCount = async () => {
       try {
@@ -78,6 +117,7 @@ export default function DashboardPage() {
       }
     };
 
+    fetchTrainingStats();
     fetchTrainerCount();
     fetchExaminerCount();
     setIsLoading(false);
@@ -92,6 +132,23 @@ export default function DashboardPage() {
 
   const refreshStaffCounts = async () => {
     try {
+      // Fetch training statistics
+      const studentsResponse = await fetch('/api/students');
+      if (studentsResponse.ok) {
+        const studentsData = await studentsResponse.json();
+        if (studentsData.success) {
+          const students = studentsData.students;
+          const totalRequested = students.length;
+          const totalCompleted = students.filter((student: any) => student.status === 'completed').length;
+          
+          setStats(prev => ({
+            ...prev,
+            totalTrainingRequested: totalRequested,
+            totalTrainingCompleted: totalCompleted
+          }));
+        }
+      }
+
       // Fetch trainer count
       const trainerResponse = await fetch('/api/trainers');
       if (trainerResponse.ok) {
@@ -176,6 +233,8 @@ export default function DashboardPage() {
               return <TrainingStaffManagement onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'set-inactive-active') {
               return <SetInactiveActive onTrainerChange={refreshStaffCounts} />;
+            } else if (activeSection === 'issue-test-token') {
+              return <IssueTestToken />;
         } else if (activeSection === 'inactivation-requests') {
           return <InactivationRequests onRequestProcessed={refreshStaffCounts} />;
         } else if (activeSection === 'my-training') {
@@ -245,18 +304,23 @@ export default function DashboardPage() {
                 />
               );
             } else if (activeSection === 'theoretical-checkout') {
-              return (
-                <ComingSoon 
-                  title="Theoretical Checkout" 
-                  description="Complete theoretical checkout procedures"
-                  color="purple"
-                  icon={
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  }
-                />
-              );
+              return <TheoreticalCheckout />;
+            } else if (activeSection === 'training-request') {
+              return <TrainingRequestForm />;
+            } else if (activeSection === 'manage-topics') {
+              return <TrainingTopicsManagement />;
+            } else if (activeSection === 'my-assignments') {
+              return <TrainingAssignments />;
+            } else if (activeSection === 'training-calendar') {
+              return <TrainingCalendar />;
+            } else if (activeSection === 'finished-training') {
+              return <FinishedTraining />;
+            } else if (activeSection === 'trainer-guidelines') {
+              return <TrainerGuidelines />;
+            } else if (activeSection === 'emergency-handbook') {
+              return <EmergencyHandbook />;
+            } else if (activeSection === 'instructions') {
+              return <Instructions />;
             } else if (activeSection === 'local-procedures') {
               return (
                 <ComingSoon 
@@ -364,6 +428,4 @@ export default function DashboardPage() {
           })()}
         </div>
       </div>
-    </div>
-  );
-}
+    </div>  );}// Example fixes for `any`:const handleSomething = (event: React.MouseEvent<HTMLButtonElement>) => { /* ... */ }// If you have a function like:const processData = (data: unknown) => { /* ... */ }
