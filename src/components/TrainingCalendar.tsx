@@ -13,6 +13,18 @@ interface TrainingEvent {
   trainerName: string;
 }
 
+interface AssignmentData {
+  id: string;
+  studentName?: string;
+  pilotName?: string;
+  topicName: string;
+  requestedDate: string;
+  requestedTime: string;
+  status: string;
+  assignedTrainerName?: string;
+  assignedTrainer?: string;
+}
+
 export default function TrainingCalendar() {
   const [events, setEvents] = useState<TrainingEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +41,19 @@ export default function TrainingCalendar() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          setEvents(data.assignments);
+          // Transform the data to match our TrainingEvent interface
+          const trainingEvents = data.assignments
+            .filter((assignment: AssignmentData) => assignment.status === 'assigned' || assignment.status === 'in-progress' || assignment.status === 'completed')
+            .map((assignment: AssignmentData) => ({
+              id: assignment.id,
+              pilotName: assignment.studentName || assignment.pilotName || 'Unknown',
+              topicName: assignment.topicName,
+              scheduledDate: assignment.requestedDate,
+              scheduledTime: assignment.requestedTime,
+              status: assignment.status,
+              trainerName: assignment.assignedTrainerName || assignment.assignedTrainer || 'Unassigned'
+            }));
+          setEvents(trainingEvents);
         }
       }
     } catch (error) {
@@ -194,9 +218,12 @@ export default function TrainingCalendar() {
                           <div
                             key={event.id}
                             className={`text-xs p-1 rounded text-white truncate ${getStatusColor(event.status)}`}
-                            title={`${event.pilotName} - ${event.topicName} at ${formatTime(event.scheduledTime)}`}
+                            title={`Training - ${event.trainerName} - ${event.pilotName} - ${formatTime(event.scheduledTime)}`}
                           >
-                            {event.pilotName}
+                            <div className="font-semibold">Training</div>
+                            <div>{event.trainerName}</div>
+                            <div>{event.pilotName}</div>
+                            <div>{formatTime(event.scheduledTime)}</div>
                           </div>
                         ))}
                         {dayEvents.length > 3 && (
@@ -232,15 +259,14 @@ export default function TrainingCalendar() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-medium text-gray-900">{event.pilotName}</h4>
-                        <p className="text-sm text-gray-600">{event.topicName}</p>
-                        <p className="text-xs text-gray-500">
-                          Trainer: {event.trainerName || 'Unassigned'}
-                        </p>
+                        <h4 className="font-medium text-gray-900">Training</h4>
+                        <p className="text-sm text-gray-600">Trainer: {event.trainerName || 'Unassigned'}</p>
+                        <p className="text-sm text-gray-600">Student: {event.pilotName}</p>
+                        <p className="text-sm text-gray-600">Topic: {event.topicName}</p>
                       </div>
                       <div className="text-right">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          event.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
+                          event.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
                           event.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
                           event.status === 'completed' ? 'bg-green-100 text-green-800' :
                           'bg-gray-100 text-gray-800'

@@ -31,7 +31,7 @@ export default function MyAssignments() {
   const [assignments, setAssignments] = useState<TrainingAssignment[]>([]);
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<{id: string, name: string} | null>(null);
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<TrainingAssignment | null>(null);
 
@@ -59,11 +59,31 @@ export default function MyAssignments() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          setAssignments(data.assignments || []);
+          // Transform the data to match our interface - show all requests for now
+          const allRequests = data.requests || [];
+          const userAssignments = allRequests
+            .map((request: {id: string, pilotId: string, pilotName: string, topicId: string, topicName: string, assignedTrainerId?: string, assignedTrainer?: string, status: string, requestedDate: string, requestedTime: string, comments?: string, createdAt: string}) => ({
+              id: request.id,
+              studentId: request.pilotId,
+              studentName: request.pilotName,
+              topicId: request.topicId,
+              topicName: request.topicName,
+              assignedTrainerId: request.assignedTrainerId,
+              assignedTrainerName: request.assignedTrainer,
+              status: request.status,
+              requestedDate: request.requestedDate,
+              requestedTime: request.requestedTime,
+              comments: request.comments,
+              createdAt: request.createdAt,
+              updatedAt: request.createdAt
+            }));
+          setAssignments(userAssignments);
         }
       }
     } catch (error) {
       console.error('Error fetching assignments:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -204,7 +224,8 @@ export default function MyAssignments() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="text-white dark:text-white">Loading assignments...</div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 ml-4"></div>
       </div>
     );
   }
@@ -215,90 +236,79 @@ export default function MyAssignments() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg p-6"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
       >
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Training Assignments</h2>
-          <p className="text-gray-600">Manage training assignments and auto-assignment system</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-white dark:text-white mb-2">Training Assignments by JAL {currentUser?.id || 'User'}</h2>
+              <p className="text-white dark:text-white">Manage training assignments and auto-assignment system for {currentUser?.name || 'Current User'}</p>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={fetchAssignments}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="text-yellow-800 font-semibold">Pending</div>
-            <div className="text-2xl font-bold text-yellow-900">
-              {assignments.filter(a => a.status === 'pending').length}
-            </div>
-          </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="text-blue-800 font-semibold">Assigned</div>
-            <div className="text-2xl font-bold text-blue-900">
-              {assignments.filter(a => a.status === 'assigned').length}
-            </div>
-          </div>
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <div className="text-purple-800 font-semibold">In Progress</div>
-            <div className="text-2xl font-bold text-purple-900">
-              {assignments.filter(a => a.status === 'in-progress').length}
-            </div>
-          </div>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div className="text-green-800 font-semibold">Completed</div>
-            <div className="text-2xl font-bold text-green-900">
-              {assignments.filter(a => a.status === 'completed').length}
-            </div>
-          </div>
-        </div>
 
         {/* Assignments Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  Nr.
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Topic
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  Person
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Assigned Trainer
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  Function
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  Rating
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Requested Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                <th className="px-6 py-3 text-left text-xs font-medium text-white dark:text-white uppercase tracking-wider">
+                  View
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {assignments.map((assignment) => (
-                <tr key={assignment.id} className="hover:bg-gray-50">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {assignments.map((assignment, index) => (
+                <tr key={assignment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-white dark:text-white">{index + 1}</div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{assignment.studentName}</div>
-                      <div className="text-sm text-gray-500">ID: {assignment.studentId}</div>
+                      <div className="text-sm font-medium text-white dark:text-white">{assignment.studentName}</div>
+                      <div className="text-sm text-white dark:text-white">JAL ID: {assignment.studentId}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{assignment.topicName}</div>
+                    <div className="text-sm text-white dark:text-white">TR-T01</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {assignment.assignedTrainerName || 'Not Assigned'}
-                    </div>
+                    <div className="text-sm text-white dark:text-white">-</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-white dark:text-white">{assignment.topicName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assignment.status)}`}>
                       {getStatusText(assignment.status)}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(assignment.requestedDate).toLocaleDateString()} at {assignment.requestedTime}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     {assignment.status === 'pending' && (
@@ -335,10 +345,17 @@ export default function MyAssignments() {
           </table>
         </div>
 
+        {/* Total Count */}
+        {assignments.length > 0 && (
+          <div className="text-center py-4">
+            <div className="text-white dark:text-white text-lg">Total of Trainings {assignments.length}</div>
+          </div>
+        )}
+
         {assignments.length === 0 && (
           <div className="text-center py-8">
-            <div className="text-gray-500 text-lg">No training assignments found</div>
-            <div className="text-gray-400 text-sm mt-2">Training requests will appear here once submitted</div>
+            <div className="text-white dark:text-white text-lg">Total of Trainings 0</div>
+            <div className="text-white dark:text-white text-sm mt-2">Training requests will appear here once submitted</div>
           </div>
         )}
       </motion.div>
@@ -346,10 +363,10 @@ export default function MyAssignments() {
       {/* Reassign Modal */}
       {showReassignModal && selectedAssignment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold mb-4">Reassign Training</h3>
-            <p className="text-gray-600 mb-4">
-              Reassign "{selectedAssignment.topicName}" for {selectedAssignment.studentName} to a different trainer.
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4 text-white dark:text-white">Reassign Training</h3>
+            <p className="text-white dark:text-white mb-4">
+              Reassign &quot;{selectedAssignment.topicName}&quot; for {selectedAssignment.studentName} to a different trainer.
             </p>
             
             <div className="space-y-2 mb-4">
@@ -357,10 +374,10 @@ export default function MyAssignments() {
                 <button
                   key={trainer.id}
                   onClick={() => reassignTrainer(selectedAssignment.id, trainer.id)}
-                  className="w-full text-left p-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                  className="w-full text-left p-3 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <div className="font-medium">{trainer.name}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="font-medium text-white dark:text-white">{trainer.name}</div>
+                  <div className="text-sm text-white dark:text-white">
                     {trainer.currentAssignments}/{trainer.maxAssignments} assignments
                   </div>
                 </button>
@@ -370,7 +387,7 @@ export default function MyAssignments() {
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setShowReassignModal(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-4 py-2 text-white dark:text-white hover:text-gray-200 dark:hover:text-gray-300 transition-colors"
               >
                 Cancel
               </button>

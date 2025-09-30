@@ -20,7 +20,7 @@ import ApprovalTrainer from '../../components/ApprovalTrainer';
 import ApprovalExaminer from '../../components/ApprovalExaminer';
 import TrainingRequestForm from '../../components/TrainingRequestForm';
 import TrainingTopicsManagement from '../../components/TrainingTopicsManagement';
-import TrainingAssignments from '../../components/TrainingAssignments';
+import MyAssignments from '../../components/MyAssignments';
 import TrainingCalendar from '../../components/TrainingCalendar';
 import FinishedTraining from '../../components/FinishedTraining';
 import TrainerGuidelines from '../../components/TrainerGuidelines';
@@ -302,7 +302,7 @@ export default function DashboardPage() {
             } else if (activeSection === 'manage-topics') {
               return <TrainingTopicsManagement />;
             } else if (activeSection === 'my-assignments') {
-              return <TrainingAssignments />;
+              return <MyAssignments />;
             } else if (activeSection === 'training-calendar') {
               return <TrainingCalendar />;
             } else if (activeSection === 'finished-training') {

@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { TrainingStats } from '../types';
 import { Student } from '../types/common';
 
 import UserProfile from '../components/UserProfile';
@@ -31,6 +29,7 @@ import Instructions from '../components/Instructions';
 import IssueTestToken from '../components/IssueTestToken';
 import ComingSoon from '../components/ComingSoon';
 import TheoreticalCheckout from '../components/TheoreticalCheckout';
+import ThemeToggle from '../components/ThemeToggle';
 
 type SectionKey =
   | 'dashboard'
@@ -68,12 +67,6 @@ export default function DashboardPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<SectionKey>('dashboard');
-  const [stats, setStats] = useState<TrainingStats>({
-    totalTrainingRequested: 0,
-    totalTrainingCompleted: 0,
-    totalTrainers: 0,
-    totalExaminers: 0,
-  });
 
   useEffect(() => {
     const apiKey = localStorage.getItem('jal_api_key');
@@ -82,53 +75,7 @@ export default function DashboardPage() {
       return;
     }
 
-    const fetchTrainingStats = async () => {
-      try {
-        const response = await fetch('/api/students');
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data.success) {
-          const students: Student[] = data.students;
-          const totalRequested = students.length;
-          const totalCompleted = students.filter((s) => s.status === 'completed').length;
-          setStats((prev) => ({
-            ...prev,
-            totalTrainingRequested: totalRequested,
-            totalTrainingCompleted: totalCompleted,
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching training stats:', error);
-      }
-    };
-
-    const fetchTrainerCount = async () => {
-      try {
-        const response = await fetch('/api/trainers');
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data.success) {
-          setStats((prev) => ({ ...prev, totalTrainers: data.trainers.length }));
-        }
-      } catch (error) {
-        console.error('Error fetching trainer count:', error);
-      }
-    };
-
-    const fetchExaminerCount = async () => {
-      try {
-        const response = await fetch('/api/examiners');
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data.success) {
-          setStats((prev) => ({ ...prev, totalExaminers: data.examiners.length }));
-        }
-      } catch (error) {
-        console.error('Error fetching examiner count:', error);
-      }
-    };
-
-    Promise.all([fetchTrainingStats(), fetchTrainerCount(), fetchExaminerCount()]).finally(() =>
+    Promise.all([]).finally(() =>
       setIsLoading(false)
     );
   }, [router]);
@@ -141,41 +88,7 @@ export default function DashboardPage() {
   };
 
   const refreshStaffCounts = async () => {
-    try {
-      // students
-      const studentsResponse = await fetch('/api/students');
-      if (studentsResponse.ok) {
-        const studentsData = await studentsResponse.json();
-        if (studentsData.success) {
-          const students: Student[] = studentsData.students;
-          const totalRequested = students.length;
-          const totalCompleted = students.filter((s) => s.status === 'completed').length;
-          setStats((prev) => ({
-            ...prev,
-            totalTrainingRequested: totalRequested,
-            totalTrainingCompleted: totalCompleted,
-          }));
-        }
-      }
-      // trainers
-      const trainerResponse = await fetch('/api/trainers');
-      if (trainerResponse.ok) {
-        const trainerData = await trainerResponse.json();
-        if (trainerData.success) {
-          setStats((prev) => ({ ...prev, totalTrainers: trainerData.trainers.length }));
-        }
-      }
-      // examiners
-      const examinerResponse = await fetch('/api/examiners');
-      if (examinerResponse.ok) {
-        const examinerData = await examinerResponse.json();
-        if (examinerData.success) {
-          setStats((prev) => ({ ...prev, totalExaminers: examinerData.examiners.length }));
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching staff counts:', error);
-    }
+    // Function kept for compatibility but no longer updates stats
   };
 
   if (isLoading) {
@@ -384,58 +297,22 @@ export default function DashboardPage() {
           />
         );
       default:
-        return (
-          <>
-            <WelcomeSection />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <motion.div
-                className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Requested</h3>
-                <p className="text-3xl font-bold">{stats.totalTrainingRequested}</p>
-              </motion.div>
-
-              <motion.div
-                className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <h3 className="text-sm font-medium opacity-90 mb-2">Total Training Completed</h3>
-                <p className="text-3xl font-bold">{stats.totalTrainingCompleted}</p>
-              </motion.div>
-
-              <motion.div
-                className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <h3 className="text-sm font-medium opacity-90 mb-2">
-                  Total Available Trainers/Examiners
-                </h3>
-                <p className="text-3xl font-bold">
-                  {stats.totalTrainers}/{stats.totalExaminers}
-                </p>
-              </motion.div>
-            </div>
-          </>
-        );
+        return <WelcomeSection />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Sidebar */}
       <Sidebar activeSection={activeSection} onSectionChange={(section: SectionKey) => setActiveSection(section)} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Navigation */}
-        <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+        <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg">
+              <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-800">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -445,8 +322,9 @@ export default function DashboardPage() {
                   />
                 </svg>
               </button>
-              <span className="text-gray-700 font-medium">Statistics</span>
-              <span className="text-gray-700 font-medium">Settings</span>
+              <span className="text-white font-medium dark:text-white">Statistics</span>
+              <span className="text-white font-medium dark:text-white">Settings</span>
+              <ThemeToggle />
             </div>
 
             <UserProfile onLogout={handleLogout} />
@@ -454,7 +332,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Content */}
-        <div className="flex-1 p-6 space-y-6">{renderSection()}</div>
+        <div className="flex-1 p-6 space-y-6 bg-gray-50 dark:bg-gray-900">{renderSection()}</div>
       </div>
     </div>
   );

@@ -613,8 +613,8 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
             onClick={() => setActiveTab('course-setup')}
             className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
               activeTab === 'course-setup' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-white shadow-sm' 
+                : 'text-white hover:text-gray-200'
             }`}
           >
             Set up your course
@@ -623,8 +623,8 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
             onClick={() => setActiveTab('add-students')}
             className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
               activeTab === 'add-students' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-white shadow-sm' 
+                : 'text-white hover:text-gray-200'
             }`}
           >
             Add students
@@ -633,8 +633,8 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
             onClick={() => setActiveTab('track-progress')}
             className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
               activeTab === 'track-progress' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-white shadow-sm' 
+                : 'text-white hover:text-gray-200'
             }`}
           >
             Track progress
@@ -643,8 +643,8 @@ export default function TrainingStaffManagement({ onTrainerChange }: TrainingSta
             onClick={() => setActiveTab('upload-files')}
             className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
               activeTab === 'upload-files' 
-                ? 'bg-white text-gray-900 shadow-sm' 
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-white shadow-sm' 
+                : 'text-white hover:text-gray-200'
             }`}
           >
             Upload files

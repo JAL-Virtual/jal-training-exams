@@ -203,16 +203,6 @@ export default function TrainingRequestForm() {
             </motion.button>
           </div>
         </form>
-
-        {/* User Info */}
-        {user && (
-          <div className="mt-6 p-4 bg-gray-50 rounded-md">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Requesting as:</h3>
-            <p className="text-sm text-gray-600">
-              <strong>{user.name}</strong> (JAL ID: {user.id})
-            </p>
-          </div>
-        )}
       </motion.div>
     </div>
   );

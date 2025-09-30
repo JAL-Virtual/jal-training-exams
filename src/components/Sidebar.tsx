@@ -89,8 +89,8 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   // };
 
   return (
-    <div className="w-72 bg-white shadow-lg border-r border-gray-200">
-      <div className="p-4 border-b border-gray-200">
+    <div className="w-72 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-center h-16">
           <button 
             onClick={() => onSectionChange('dashboard')}
@@ -110,13 +110,13 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
       <nav className="p-4 space-y-2">
         {/* DASHBOARDS - Always visible */}
         <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">DASHBOARDS</h3>
+          <h3 className="text-xs font-semibold text-white dark:text-white uppercase tracking-wider mb-3">DASHBOARDS</h3>
           <div className="space-y-1">
             <button 
               className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
                 activeSection === 'dashboard' 
-                  ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-blue-100 dark:bg-blue-900 text-white dark:text-white border-l-4 border-blue-500' 
+                  : 'text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               onClick={() => onSectionChange('dashboard')}
             >
@@ -130,8 +130,8 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <button 
               className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
                 activeSection === 'instructions' 
-                  ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-blue-100 dark:bg-blue-900 text-white dark:text-white border-l-4 border-blue-500' 
+                  : 'text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               onClick={() => onSectionChange('instructions')}
             >
@@ -144,8 +144,8 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <button 
               className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
                 activeSection === 'training-request' 
-                  ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500' 
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-blue-100 dark:bg-blue-900 text-white dark:text-white border-l-4 border-blue-500' 
+                  : 'text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               onClick={() => onSectionChange('training-request')}
             >
@@ -161,7 +161,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         <div className="mb-6">
           <button
             onClick={() => toggleSection('resources')}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-white dark:text-white uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm"
           >
               <span className="flex-1 text-left">RESOURCES DEPARTMENT</span>
             <svg 
@@ -176,7 +176,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.resources ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
             <div className="space-y-1 mt-2 pl-2">
               <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                 onClick={() => onSectionChange('local-procedures')}
               >
                 <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +185,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                 Local Procedures
               </button>
               <button 
-                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                 onClick={() => onSectionChange('charts')}
               >
                 <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           <div className="mb-6">
             <button
               onClick={() => toggleSection('examination')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-white dark:text-white uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm"
             >
               <span className="flex-1 text-left">EXAM DEPARTMENT</span>
               <svg 
@@ -220,7 +220,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.examination ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('request-exam')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,7 +229,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Request Exam
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('approved-examiners')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,7 +238,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Approved Examiners
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('theoretical-checkout')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,7 +256,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           <div className="mb-6">
             <button
               onClick={() => toggleSection('training-staff')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-white dark:text-white uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm"
             >
               <span className="flex-1 text-left">TRAINING STAFF DEPARTMENT</span>
               <svg 
@@ -271,7 +271,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections['training-staff'] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('my-assignments')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,7 +280,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   My Assignments
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('trainer-guidelines')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,16 +289,16 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Guideline for Trainers
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('emergency-handbook')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                   </svg>
-                  <span className="text-blue-600 font-bold">Coming Soon!</span>
+                  <span className="text-red-600 font-bold">New!</span> <span className="ml-1">Emergency Handbook</span>
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('training-calendar')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,7 +307,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Training Calendar
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('finished-training')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,7 +316,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Finished Training
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('training-staff-management')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,7 +325,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Training Staff Management
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('training-control')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,7 +334,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Training Control
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('pickup-training')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +343,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Pickup Training
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('issue-test-token')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,7 +362,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           <div className="mb-6">
             <button
               onClick={() => toggleSection('examiner-staff')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-white dark:text-white uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm"
             >
               <span className="flex-1 text-left">EXAMINER STAFF DEPARTMENT</span>
               <svg 
@@ -377,7 +377,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections['examiner-staff'] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('examiner-staff-management')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +386,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Examiner Staff Management
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('examination')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -404,7 +404,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           <div className="mb-6">
             <button
               onClick={() => toggleSection('management')}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-gray-500 uppercase tracking-wider hover:bg-gray-100 transition-all duration-200 hover:shadow-sm"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-semibold text-white dark:text-white uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:shadow-sm"
             >
               <span className="flex-1 text-left">MANAGEMENT DEPARTMENT</span>
               <svg 
@@ -419,7 +419,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedSections.management ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-1 mt-2 pl-2">
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('manage-staff')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,7 +428,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Manage Staff
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('manage-topics')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -437,7 +437,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                   Manage Topics
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                   onClick={() => onSectionChange('reports-analytics')}
                 >
                   <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -447,7 +447,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
                 </button>
                 {isAdmin && (
                   <button 
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-white dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200 hover:translate-x-1 flex items-center"
                     onClick={() => onSectionChange('inactivation-requests')}
                   >
                     <svg className="w-4 h-4 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
