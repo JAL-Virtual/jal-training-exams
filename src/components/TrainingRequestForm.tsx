@@ -139,7 +139,7 @@ export default function TrainingRequestForm() {
               id="topic"
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
               required
             >
               <option value="">Select a training topic</option>
@@ -156,17 +156,17 @@ export default function TrainingRequestForm() {
             )}
           </div>
 
-          {/* Student ID */}
+          {/* JAL ID */}
           <div>
             <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-2">
-              Student ID *
+              JAL ID *
             </label>
             <input
               type="text"
               id="studentId"
               value={formData.studentId}
               onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
               required
             />
           </div>
@@ -181,7 +181,7 @@ export default function TrainingRequestForm() {
               value={formData.comments}
               onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
               placeholder="Any additional information or special requirements..."
             />
           </div>

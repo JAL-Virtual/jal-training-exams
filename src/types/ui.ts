@@ -2,7 +2,6 @@ export type SectionKey =
   | 'dashboard'
   | 'manage-staff'
   | 'training-staff-management'
-  | 'set-inactive-active'
   | 'issue-test-token'
   | 'inactivation-requests'
   | 'my-training'

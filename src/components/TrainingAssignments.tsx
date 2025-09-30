@@ -13,7 +13,6 @@ import WelcomeSection from '../components/WelcomeSection';
 import Sidebar from '../components/Sidebar';
 import ManageStaff from '../components/ManageStaff';
 import TrainingStaffManagement from '../components/TrainingStaffManagement';
-import SetInactiveActive from '../components/SetInactiveActive';
 import InactivationRequests from '../components/InactivationRequests';
 import MyTrainingDashboard from '../components/MyTrainingDashboard';
 import PendingTraining from '../components/PendingTraining';
@@ -37,7 +36,6 @@ type SectionKey =
   | 'dashboard'
   | 'manage-staff'
   | 'training-staff-management'
-  | 'set-inactive-active'
   | 'issue-test-token'
   | 'inactivation-requests'
   | 'my-training'
@@ -205,8 +203,6 @@ export default function DashboardPage() {
         return <ManageStaff onTrainerChange={refreshStaffCounts} />;
       case 'training-staff-management':
         return <TrainingStaffManagement onTrainerChange={refreshStaffCounts} />;
-      case 'set-inactive-active':
-        return <SetInactiveActive onTrainerChange={refreshStaffCounts} />;
       case 'issue-test-token':
         return <IssueTestToken />;
       case 'inactivation-requests':

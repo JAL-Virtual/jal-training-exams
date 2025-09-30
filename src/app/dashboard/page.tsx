@@ -11,7 +11,6 @@ import WelcomeSection from '../../components/WelcomeSection';
 import Sidebar from '../../components/Sidebar';
 import ManageStaff from '../../components/ManageStaff';
 import TrainingStaffManagement from '../../components/TrainingStaffManagement';
-import SetInactiveActive from '../../components/SetInactiveActive';
 import InactivationRequests from '../../components/InactivationRequests';
 import MyTrainingDashboard from '../../components/MyTrainingDashboard';
 import PendingTraining from '../../components/PendingTraining';
@@ -226,8 +225,6 @@ export default function DashboardPage() {
               return <ManageStaff onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'training-staff-management') {
               return <TrainingStaffManagement onTrainerChange={refreshStaffCounts} />;
-            } else if (activeSection === 'set-inactive-active') {
-              return <SetInactiveActive onTrainerChange={refreshStaffCounts} />;
             } else if (activeSection === 'issue-test-token') {
               return <IssueTestToken />;
         } else if (activeSection === 'inactivation-requests') {
